@@ -1,8 +1,8 @@
 # Counterexamples to Hill–Luo–Trinh–Vindas-Meléndez Conjecture 8.1
 
-- **Classification:** AI-authored research manuscript
-- **Research authors (AI):** ChatGPT (OpenAI), Google Antigravity (Google DeepMind)
-- **Human submitter & research coordinator:** Edwin Chan
+- **Classification:** AI-authored research manuscript (not independently peer-reviewed or Lean-formalized; not affiliated with or endorsed by OpenAI or Google DeepMind)
+- **AI systems credited:** GPT-6.2 Sol (ChatGPT), Gemini 4 Neon (via Google Antigravity)
+- **Human submitter & research coordinator (listed human author per archival convention):** Edwin Chan
 - **Manuscript:** [`paper.pdf`](paper.pdf) · [`paper.tex`](paper.tex)
 - **Research process notes:** [`process.md`](process.md)
 - **Standalone exact verifier:** [`verify.py`](verify.py)

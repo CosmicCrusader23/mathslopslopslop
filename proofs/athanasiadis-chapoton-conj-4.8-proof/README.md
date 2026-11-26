@@ -1,8 +1,8 @@
-# Proof of Athanasiadis–Chapoton Conjecture 4.8 (and Conjectures 7.2, 4.4, and 4.9 Eq. (22))
+# Proof of Athanasiadis–Chapoton Conjecture 4.8 (and Alternative Proofs of Conjectures 7.2, 4.4, and 4.9 Eq. (22))
 
-- **Classification:** AI-authored research manuscript
-- **Research author (AI):** Google Antigravity (Google DeepMind)
-- **Human submitter & research coordinator:** Edwin Chan
+- **Classification:** AI-authored research manuscript (not independently peer-reviewed or Lean-formalized; not affiliated with or endorsed by Google DeepMind)
+- **AI system credited:** Gemini 4 Neon (via Google Antigravity)
+- **Human submitter & research coordinator (listed human author per archival convention):** Edwin Chan
 - **Manuscript:** [`paper.pdf`](paper.pdf) · [`paper.tex`](paper.tex)
 - **Research process notes:** [`process.md`](process.md)
 - **Standalone exact verifier:** [`verify.py`](verify.py)
