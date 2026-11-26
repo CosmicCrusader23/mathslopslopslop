@@ -22,17 +22,16 @@ Verifies:
          inequalities + exact Lagrange polynomial interpolation,
      (b) Theorem 1.5(a) / eq. (17) draconian formula,
      (c) Conjecture 4.4 direct word-descent enumeration over W_tau,
-     (d) Conjecture 4.9 eq. (22) (-1)^n Ehr(Q_{tau*}, -2) = #Max(P_tau).
+     (d) the lattice-count identity in Conjecture 4.9 eq. (22), using duality.
   4. Analysis of the 8-element height-2 counterexample P_3 to Conjecture 5.3
      (non-real-rooted support polynomial h(P_3, t)), confirming P_3 satisfies
      Conjecture 4.8 with strictly positive magic polynomial M_{P_3}(y) and
-     real-rooted h*(Q_{P_3}, t), verified by direct lattice-point counting.
-  5. Sharpness negative control: a 6-element non-transitive matched Y-type
-     generalized permutohedron failing magic positivity (c_5 = -1/6 < 0),
-     confirming that transitivity (the distributive lattice of order filters)
-     is essential.
+     real-rooted h*(Q_{P_3}, t), verified at all nine interpolation dilates.
+  5. A 6-element non-transitive matched Y-type generalized permutohedron
+     failing magic positivity (c_5 = -1/6), checked by the draconian formula.
 """
 
+from collections import defaultdict
 from fractions import Fraction
 import itertools
 import math
@@ -597,25 +596,30 @@ def verify_section_2():
             bvec = [0] * n
 
             def enum_all(idx, rem):
-                if idx == n - 1:
-                    bvec[idx] = rem
+                if idx == n:
+                    if rem:
+                        return
                     for F in filters:
                         if sum(bvec[i] for i in range(n) if (F >> i) & 1) > W[F]:
-                            bvec[idx] = 0
                             return
                     p = 1
                     for e in range(n):
                         p *= gen_binom(w[e], bvec[e])
                     tot[0] += p
-                    bvec[idx] = 0
                     return
-                for val in range(rem + 1):
+                for val in ((rem,) if idx == n - 1 else range(rem + 1)):
                     bvec[idx] = val
                     enum_all(idx + 1, rem - val)
                 bvec[idx] = 0
 
             enum_all(0, m)
             assert tot[0] == gen_binom(WE, m)
+
+    test_dlv(0, [], [])
+    test_dlv(1, [1], [0])
+    test_dlv(2, [3, 3], [-2, 2])
+    test_dlv(3, preorder_closure(3, [(0, 1), (1, 2)]), [-2, 0, 2])
+    print("  [OK] Empty, zero-weight, and signed zero-total boundary cases")
 
     rng = random.Random(260526916)
     tested = 0
@@ -638,6 +642,7 @@ def verify_section_2():
                 test_dlv(n, up, w)
                 tested += 1
                 break
+    assert tested == 120
     print(f"  [OK] Verified A_F(r) = 0 and S(tau, w, m) = binom(W_E, m) on {tested} random")
     print("       preorders (posets & non-poset preorders) with signed integer weights w.")
 
@@ -652,6 +657,7 @@ def verify_section_3(phi, psi):
     print("=" * 74)
 
     cases = [
+        ("Empty preorder", 0, []),
         ("Single element n=1", 1, []),
         ("Antichain n=4", 4, []),
         ("Single block n=4", 4, [(0, 1), (1, 2), (2, 3), (3, 0)]),
@@ -702,9 +708,11 @@ def verify_section_3(phi, psi):
         ehr_master = magic_to_ehr(M_master, n)
 
         # (d) Conjecture 4.4 direct word-descent enumeration
-        h_word_coeffs = [0] * n
+        h_word_coeffs = [0] * n if n else [1]
         max_pts = [pt for pt in pts if sum(pt) == n]
         for pt in max_pts:
+            if not pt:
+                continue  # The empty preorder has h*-polynomial 1.
             letters = []
             for e, c in enumerate(pt):
                 letters.extend([e] * c)
@@ -714,7 +722,7 @@ def verify_section_3(phi, psi):
         hstar_words = poly_trim([Fraction(c) for c in h_word_coeffs])
         hstar_direct = ehr_to_hstar(ehr_direct, n)
 
-        # (e) Reciprocity (Conjecture 7.2) & Zeta at -1 (Conjecture 4.9 eq. (16))
+        # (e) Reciprocity (Conjecture 7.2) and the dual Ehrhart evaluation for Eq. (22)
         biE_neg = bipoly_subst_linear(biE_master, -1, 0, -1, 0)
         biE_shift = bipoly_subst_linear(biE_master, 1, -1, 1, -1)
         sign = Fraction((-1) ** n)
@@ -730,12 +738,43 @@ def verify_section_3(phi, psi):
         assert hstar_direct == hstar_words
         assert ((-1) ** n) * poly_eval(ehr_direct, Fraction(-2)) == len(max_pts)
 
-        print(f"  [OK] {name:22s} | M(y) >= 0 (deg {len(M_master)-1}) | Direct=1.5a=Master=Conj4.4=Conj7.2=Conj4.9(22)")
+        if name == "Fig 1 running ex. n=5":
+            assert sum(1 not in pt for pt in pts) == 13
+            assert ehr_direct == [Fraction(c, 120) for c in (120, 900, 2660, 3860, 2740, 760)]
+            assert M_master == [Fraction(1), Fraction(5, 2), Fraction(13, 6), Fraction(2, 3)]
+
+        identities = "constant boundary case" if n == 0 else "Direct=1.5a=Master=Conj4.4=Conj7.2=Conj4.9(22)"
+        print(f"  [OK] {name:22s} | M(y) >= 0 (deg {len(M_master)-1}) | {identities}")
 
 
 # ============================================================================
 # SECTION 4: Patel's 8-element Conjecture 5.3 counterexample P_3
 # ============================================================================
+
+def count_patels_polytope_direct(t):
+    """Count from Patel's upper-subset cuts, scaled to an integer dilate t."""
+    # A lower coordinate leaves a deficit d in [0,t]. An upper coordinate has
+    # excess e above t, with t+1 choices at e=0 and one at a positive e.
+    # Track total branch deficit, total branch excess, and the amount of the
+    # central lower deficit required by those branches with e > d.
+    states = {(0, 0, 0): 1}
+    for _ in range(3):
+        updated = defaultdict(int)
+        for (deficit, excess, required), count in states.items():
+            for d in range(t + 1):
+                for e in range(d + t - required + 1):
+                    weight = 1 if e else t + 1
+                    updated[deficit + d, excess + e, required + max(0, e - d)] += count * weight
+        states = updated
+
+    # The central upper excess e0 is at most the branch deficit, and e0 plus
+    # all branch excesses is at most the branch and central deficits together.
+    return sum(
+        count * (t + 1 + deficit - max(0, excess - central))
+        for (deficit, excess, required), count in states.items()
+        for central in range(max(required, excess - deficit), t + 1)
+    )
+
 
 def verify_section_4(phi):
     print("\n" + "=" * 74)
@@ -747,15 +786,17 @@ def verify_section_4(phi):
     edges = [(0, 5), (0, 6), (0, 7), (1, 4), (2, 4), (3, 4), (1, 5), (2, 6), (3, 7)]
     up = preorder_closure(n, edges)
 
-    # Support polynomial h(P_3, t) from lattice points of Q_{P_3} (note P_3 is self-dual!)
+    # Count support in the original orientation, and use the dual for Ehrhart.
+    _, down = get_ideals(n, up)
+    primal_pts = enumerate_P_taustar(n, down)
     pts = enumerate_P_taustar(n, up)
     h_supp = [0] * (n + 1)
-    for pt in pts:
+    for pt in primal_pts:
         nz = sum(1 for x in pt if x > 0)
         h_supp[nz] += 1
     assert h_supp == [1, 17, 106, 303, 427, 303, 106, 17, 1]
     real_roots_h, sf_deg_h, deg_h = count_real_roots_sturm(h_supp)
-    assert real_roots_h < sf_deg_h  # Strictly non-real-rooted!
+    assert (real_roots_h, sf_deg_h, deg_h) == (4, 8, 8)
     print(f"  Support polynomial h(P_3, t) = {h_supp}")
     print(f"  [OK] Sturm check: h(P_3, t) has {real_roots_h} distinct real roots out of degree {deg_h} -> VIOLATES Conj 5.3!")
 
@@ -779,18 +820,21 @@ def verify_section_4(phi):
     assert M_master == expected_M
     assert all(c > 0 for c in M_master)
 
-    # Direct lattice-point count check for m = 0, 1, 2, 3
+    direct_counts = [count_patels_polytope_direct(m) for m in range(n + 1)]
+    assert [poly_eval(ehr_master, Fraction(m)) for m in range(n + 1)] == direct_counts
+    assert poly_lagrange(list(enumerate(map(Fraction, direct_counts)))) == ehr_master
+    # Cross-check the reduced cuts against the full list of ideals at small dilates.
     for m in range(4):
-        direct_c = count_mQ_tau_direct(n, up, m)
-        assert direct_c == poly_eval(ehr_master, Fraction(m))
+        assert count_mQ_tau_direct(n, up, m) == direct_counts[m]
 
     hstar = ehr_to_hstar(ehr_master, n)
     hstar_ints = [int(c) for c in hstar]
+    assert hstar_ints == [1, 1272, 39969, 217034, 306464, 119943, 10737, 100]
     real_roots_hs, sf_deg_hs, deg_hs = count_real_roots_sturm(hstar_ints)
-    assert real_roots_hs == deg_hs
+    assert real_roots_hs == sf_deg_hs == deg_hs == 7
     print(f"  Magic polynomial M_{{P_3}}(y) = " + " + ".join(f"{M_master[i]}*y^{i}" for i in range(len(M_master))))
     print(f"  h*(Q_{{P_3}}, t) = {hstar_ints}")
-    print(f"  [OK] Direct lattice counts m=0..3 match; M_{{P_3}}(y) > 0; h* has all {real_roots_hs}/{deg_hs} roots real!")
+    print("  [OK] Direct lattice counts for m=0..8 match and all seven h* roots are real")
 
 
 # ============================================================================
@@ -850,13 +894,15 @@ def verify_section_5():
                    Fraction(335, 72), Fraction(-1, 6)]
     print(f"  Matched non-transitive Y-type sets (n=6): {[ [i for i in range(6) if (s>>i)&1] for s in sets ]}")
     print(f"  Magic polynomial M(y) = " + " + ".join(f"({M_y[i]})*y^{i}" for i in range(len(M_y))))
-    print(f"  [OK] c_5 = {M_y[5]} < 0! Confirms transitivity (distributive lattice of filters) is essential.")
+    print(f"  [OK] c_5 = {M_y[5]} < 0 for the matched non-transitive example")
 
 
 if __name__ == "__main__":
+    if not __debug__:
+        raise SystemExit("Run without Python optimization so every assertion is enabled.")
     phi, psi = verify_section_1()
     verify_section_2()
     verify_section_3(phi, psi)
     verify_section_4(phi)
     verify_section_5()
-    print("\nALL VERIFICATION CHECKS PASSED WITH 100% EXACT RATIONAL ARITHMETIC.")
+    print("\nALL CHECKS PASSED")
