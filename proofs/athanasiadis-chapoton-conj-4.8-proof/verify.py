@@ -2,7 +2,7 @@
 """
 Standalone exact verifier for the proof of Athanasiadis-Chapoton's
 Conjectures 4.8 (magic positivity), 7.2 (double Ehrhart reciprocity),
-4.4 (h*-polynomial word formula), and 4.9 eq. (16) (zeta at -1)
+4.4 (h*-polynomial word formula), and 4.9 eq. (22) (zeta at -1)
 from arXiv:2605.26916 ("Polytopes and posets associated to preorders").
 
 Uses ONLY Python standard library exact integer and Fraction arithmetic.
@@ -22,7 +22,7 @@ Verifies:
          inequalities + exact Lagrange polynomial interpolation,
      (b) Theorem 1.5(a) / eq. (17) draconian formula,
      (c) Conjecture 4.4 direct word-descent enumeration over W_tau,
-     (d) Conjecture 4.9 eq. (16) (-1)^n Ehr(Q_{tau*}, -2) = #Max(P_tau).
+     (d) Conjecture 4.9 eq. (22) (-1)^n Ehr(Q_{tau*}, -2) = #Max(P_tau).
   4. Analysis of the 8-element height-2 counterexample P_3 to Conjecture 5.3
      (non-real-rooted support polynomial h(P_3, t)), confirming P_3 satisfies
      Conjecture 4.8 with strictly positive magic polynomial M_{P_3}(y) and
@@ -730,7 +730,7 @@ def verify_section_3(phi, psi):
         assert hstar_direct == hstar_words
         assert ((-1) ** n) * poly_eval(ehr_direct, Fraction(-2)) == len(max_pts)
 
-        print(f"  [OK] {name:22s} | M(y) >= 0 (deg {len(M_master)-1}) | Direct=1.5a=Master=Conj4.4=Conj7.2=Conj4.9(16)")
+        print(f"  [OK] {name:22s} | M(y) >= 0 (deg {len(M_master)-1}) | Direct=1.5a=Master=Conj4.4=Conj7.2=Conj4.9(22)")
 
 
 # ============================================================================

@@ -1,0 +1,314 @@
+\documentclass[11pt]{amsart}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\textwidth=15.6cm
+\textheight=21.2cm
+\hoffset=-42pt
+\footskip=25pt
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\X}{\mathfrak{X}}
+\newcommand{\vb}{\mathbf{b}}
+\newcommand{\vx}{\mathbf{x}}
+\newcommand{\ehr}{\operatorname{ehr}}
+
+\begin{document}
+
+\title[Counterexamples to magic positivity of parking-function polytopes]{Counterexamples to magic positivity and Ehrhart positivity of generalized parking-function polytopes}
+
+\author{ChatGPT (OpenAI)}
+\author{Google Antigravity (Google DeepMind)}
+
+\date{\today}
+\thanks{AI-authored research manuscript. Human submitter and research coordinator: Edwin Chan. See the Authorship and AI Attribution section for a detailed breakdown of contributions.}
+\subjclass[2020]{52B20, 05A15, 05B35}
+\keywords{Generalized parking-function polytope, Ehrhart polynomial, magic positivity, Ehrhart positivity, uniform matroid independence polytope}
+
+\begin{abstract}
+We disprove Conjecture~8.1 (arXiv:2607.15503) of Hill, Luo, Trinh, and Vindas-Mel\'endez, which asserts that every generalized parking-function polytope $\mathfrak{X}_n(\mathbf{b})$ is magic positive for all $n \ge 3$ and all $\mathbf{b} \in \mathbb{Z}_{>0}^n$. In dimension $n=14$, the parameter vector $\mathbf{b}=(1^5,287,1^3,287,1^4)$ has exact second magic coefficient $\mu_2=-\frac{8337823}{11025}<0$, and $\mathbf{b}=(1^5,318,1^3,318,1^4)$ fails Ehrhart positivity itself with $e_2=-\frac{777669659}{3880800}<0$. The geometric obstruction is the Ehrhart-negative Minkowski sum $U_5+U_9 \subset \mathbb{R}^{14}$ of two uniform-matroid independence polytopes, which satisfies $[t^2]\mathrm{ehr}_{U_5+U_9}(t)=-\frac{36952721}{3880800}<0$. We further provide unequal-weight counterexamples in $n=14$ with $\max b_i=228$ (for $\mu_2<0$) and $\max b_i=253$ (for $e_2<0$), a $\{1,3\}$-vector counterexample in $n=18$ with $e_2>0$ and $\mu_2<0$, a binary $\{1,2\}$-vector counterexample in $n=20$ violating both Ehrhart positivity and magic positivity, and mixed multivariate negative coefficients starting at dimension $n=13$. Every rational certificate is independently verified by direct lattice-point enumeration from the defining inequalities and by closed-form draconian extraction.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+\label{sec:intro}
+
+For a positive integer vector $\vb=(b_1,\dots,b_n)\in\ZZ_{>0}^n$, let $S_j:=\sum_{r=1}^j b_r$ ($1\le j\le n$) and $\Sigma_k:=\sum_{j=n-k+1}^n S_j$ ($1\le k\le n$). The \emph{generalized parking-function polytope} (or \emph{$\vb$-parking-function polytope}) $\X_n(\vb)\subset\RR^n$, introduced in~\cite{BBCDDDLMMNV,HLV24}, is the convex hull of all $\vb$-parking functions of length $n$. By~\cite[Theorem~2.3(c)]{BBCDDDLMMNV} (restated as~\cite[Theorem~2.2]{HLTV26}), it admits the inequality description
+\begin{equation}\label{eq:ineq}
+\X_n(\vb) = \left\{\mathbf{z}=(z_1,\dots,z_n)\in\RR^n : z_i\ge 1 \text{ for } i\in[n],\; \sum_{i\in I} z_i \le \Sigma_{|I|} \text{ for all } \emptyset\ne I\subseteq[n]\right\},
+\end{equation}
+where $[n]:=\{1,\dots,n\}$.
+
+For an $n$-dimensional lattice polytope $P\subset\RR^n$, write its Ehrhart polynomial in both the standard monomial basis and the magic basis $\{t^i(t+1)^{n-i}\}_{i=0}^n$:
+\[
+\ehr_P(t) = \sum_{i=0}^n e_i(P)\,t^i = \sum_{i=0}^n \mu_i(P)\,t^i(t+1)^{n-i}.
+\]
+The polytope $P$ is \emph{Ehrhart positive} if $e_i(P)\ge 0$ for all $0\le i\le n$, and \emph{magic positive}~\cite{FH24} if $\mu_i(P)\ge 0$ for all $0\le i\le n$. Magic positivity is strictly stronger than Ehrhart positivity and, by Br\"and\'en~\cite[Theorem~4.2]{Bra06}, implies that the Ehrhart $h^*$-polynomial of $P$ is real-rooted. Since $e_0(P)=\mu_0(P)=1$, comparing coefficients of $t$ and $t^2$ yields
+\begin{equation}\label{eq:mu2}
+\mu_1(P) = e_1(P) - n,
+\qquad
+\mu_2(P) = e_2(P) - (n-1)\,e_1(P) + \binom{n}{2}.
+\end{equation}
+
+Ferroni and Higashitani~\cite[Problem~4.23]{FH24} asked to what extent magic positivity holds for generalized parking-function polytopes. Hill, Luo, Trinh, and Vindas-Mel\'endez~\cite[Theorem~7.2]{HLTV26} settled the two-parameter subfamily $\vb=(a,b,\dots,b)$, proving that $\X_n(a,b,\dots,b)$ is magic positive if and only if $(n,a,b)\ne(2,1,1)$ (extending the stable-range partial permutohedron classification of Liu and Zhang~\cite{LZ26}), and formulated the following general conjecture.
+
+\begin{quote}
+\textbf{Conjecture~8.1 of~\cite{HLTV26}.} \emph{For every $n\ge 3$ and every $\vb\in\ZZ_{>0}^n$, the polytope $\X_n(\vb)$ is magic positive. Equivalently, $PF_2=\X_2(1,1)$ is the only $\vb$-parking-function polytope that is not magic positive.}
+\end{quote}
+
+In this paper we refute Conjecture~8.1 and show that even Ehrhart positivity fails within the family $\X_n(\vb)$.
+
+\begin{theorem}[Refutation of Conjecture~8.1 and Ehrhart positivity]\label{thm:main}
+In dimension $n=14$, consider the one-parameter family
+\[
+\vb(m) := (1,1,1,1,1,\,1+m,\,1,1,1,\,1+m,\,1,1,1,1) \in \ZZ_{>0}^{14}
+\qquad (m\in\NN).
+\]
+Then the second magic coefficient of $\ehr_{\X_{14}(\vb(m))}(t)$ is the exact quadratic polynomial
+\begin{equation}\label{eq:mu2-quad}
+\mu_2\bigl(\X_{14}(\vb(m))\bigr) = -\frac{36952721}{3880800}\,m^2 + \frac{149416051}{55440}\,m + \frac{29211}{4}.
+\end{equation}
+In particular:
+\begin{enumerate}
+\item[(a)] At $m=286$, i.e.\ $\vb=(1^5,287,1^3,287,1^4)$,
+\[
+\mu_2\bigl(\X_{14}(\vb)\bigr) = -\frac{8337823}{11025} < 0,
+\]
+whereas $\mu_2(\X_{14}(\vb(285)))=\frac{102746219}{51744}>0$. Thus $\X_{14}(1^5,287,1^3,287,1^4)$ is not magic positive, refuting Conjecture~8.1 of~\cite{HLTV26}.
+\item[(b)] At $m=317$, i.e.\ $\vb=(1^5,318,1^3,318,1^4)$,
+\[
+e_2\bigl(\X_{14}(\vb)\bigr) = -\frac{777669659}{3880800} < 0,
+\qquad
+\mu_2\bigl(\X_{14}(\vb)\bigr) = -\frac{11195736263}{117600} < 0,
+\]
+so $\X_{14}(1^5,318,1^3,318,1^4)$ is not even Ehrhart positive.
+\end{enumerate}
+\end{theorem}
+
+In Section~\ref{sec:decomp} we establish the Minkowski decomposition of $\X_n(\vb)-\mathbf{1}$ into uniform-matroid independence polytopes and derive closed-form expressions for $e_1(\X_n(\vb))$ and $e_2(\X_n(\vb))$ directly from~\cite[Theorem~5.9]{HLTV26}. Section~\ref{sec:proof} proves Theorem~\ref{thm:main} by two independent exact methods, and Section~\ref{sec:sharper} collects sharper and smaller-entry counterexamples in dimensions $n=13,14,18,20$, including a binary $\{1,2\}$-vector counterexample in dimension $20$.
+
+\section{Minkowski Decomposition and Quadratic Ehrhart Coefficients}
+\label{sec:decomp}
+
+For each $r\in\{1,\dots,n\}$, let $U_r:=\{z\in[0,1]^n : \sum_{i=1}^n z_i\le r\}$ be the independence polytope of the uniform matroid of rank $r$ on $[n]$, and let $P_0:=\X_n(1,\dots,1)-\mathbf{1}$ be the shifted classical parking-function polytope.
+
+\begin{proposition}[Minkowski decomposition]\label{prop:mink}
+For every $\vb\in\ZZ_{>0}^n$, let $x_i:=b_i-1\in\NN$ ($1\le i\le n$). Then
+\begin{equation}\label{eq:mink}
+P(\vx) := \X_n(\vb) - \mathbf{1} = P_0 + \sum_{r=1}^n x_r\, U_{n-r+1}.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+By~\eqref{eq:ineq}, $P(\vx)$ is the set of points $z\in\RR_{\ge 0}^n$ satisfying $\sum_{i\in I} z_i \le \Sigma_{|I|}-|I|$ for all $\emptyset\ne I\subseteq[n]$. Substituting $S_j=j+\sum_{r=1}^j x_r$ into $\Sigma_k-k$ ($1\le k\le n$) gives
+\[
+\Sigma_k - k = \left(\sum_{j=n-k+1}^n j - k\right) + \sum_{j=n-k+1}^n \sum_{r=1}^j x_r.
+\]
+Each $x_r$ appears in the inner sum precisely for $j\in\{\max(r,n-k+1),\dots,n\}$, a total of $n-\max(r,n-k+1)+1=\min(n-r+1,k)$ times. Setting $f_0(I):=\sum_{j=n-|I|+1}^n j - |I|$ and $f_r(I):=\min(n-r+1,|I|)$, we therefore have
+\[
+\Sigma_{|I|}-|I| = f_0(I) + \sum_{r=1}^n x_r\, f_r(I)
+\qquad\text{for all } I\subseteq[n].
+\]
+For $k\in[n]$, $f_0(k)-f_0(k-1)=n-k\ge 0$ is nonincreasing in $k$, so $f_0$ is a monotone submodular rank function cutting out $P_0$; likewise each $f_r$ is the rank function of the uniform matroid $U_{n-r+1}$. By Edmonds' polymatroid Minkowski addition theorem~\cite[Theorem~44.6]{Sch03}, the polymatroid polytope of a nonnegative linear combination of rank functions equals the corresponding Minkowski sum of polymatroid polytopes, yielding~\eqref{eq:mink}.
+\end{proof}
+
+Next, recall from~\cite[Section~5 and Theorem~5.9]{HLTV26} the signed simplex coefficients
+\begin{equation}\label{eq:wk}
+w_1(\vb) := b_1 - 1,
+\qquad
+w_k(\vb) := \sum_{j=0}^{k-2}(-1)^j\binom{k-2}{j}\, b_{k-j} \quad (2\le k\le n),
+\end{equation}
+and the draconian Ehrhart formula
+\begin{equation}\label{eq:thm59}
+\ehr_{\X_n(\vb)}(t) = \sum_{\alpha\in\mathcal{D}(n)} \prod_{\emptyset\ne A\subseteq[n]} \binom{w_{|A|}(\vb)\,t + \alpha_A - 1}{\alpha_A},
+\end{equation}
+where $\mathcal{D}(n)$ consists of all sequences $\alpha=(\alpha_A)_{\emptyset\ne A\subseteq[n]}\in\NN^{2^n-1}$ satisfying the Hall condition $\sum_{A\in E}\alpha_A\le \bigl|\bigcup_{A\in E} A\bigr|$ for every nonempty family $E$ of nonempty subsets of $[n]$. Denote by $H_m:=\sum_{j=1}^m\frac{1}{j}$ the $m$-th harmonic number (with $H_0:=0$).
+
+\begin{lemma}[Closed forms for $e_1$ and $e_2$]\label{lem:e1e2}
+For every $\vb\in\ZZ_{>0}^n$, with $w_k:=w_k(\vb)$ defined by~\eqref{eq:wk},
+\begin{equation}\label{eq:e1-closed}
+e_1\bigl(\X_n(\vb)\bigr) = \sum_{k=1}^n \binom{n}{k} H_k\, w_k,
+\end{equation}
+\begin{equation}\label{eq:e2-closed}
+\begin{aligned}
+e_2\bigl(\X_n(\vb)\bigr) &= \sum_{k=1}^n \binom{n}{k} w_k^2 \sum_{a=1}^k \frac{H_{a-1}}{a} \\
+  &\quad + \frac{1}{2}\sum_{(k,\ell,u)\in\mathcal{T}_n}
+    \frac{n!\,w_k w_\ell}{(n-u)!\,(u-\ell)!\,(u-k)!\,(k+\ell-u)!}
+    \sum_{a=1}^{\min(k,u-1)}\frac{H_{\min(\ell,u-a)}}{a},
+\end{aligned}
+\end{equation}
+where $\mathcal{T}_n:=\{(k,\ell,u)\in[n]^3 : \max(k,\ell)\le u\le\min(n,k+\ell),\; (k,\ell,u)\neq(u,u,u)\}$.
+\end{lemma}
+
+\begin{proof}
+For every integer $a\ge 1$, expanding $\binom{y+a-1}{a}=\frac{y(y+1)\cdots(y+a-1)}{a!}$ around $y=0$ gives
+\[
+\binom{y+a-1}{a} = \frac{1}{a}\,y + \frac{H_{a-1}}{a}\,y^2 + O(y^3),
+\]
+while $\binom{y-1}{0}=1$. Substituting $y=w_{|A|}t$ into~\eqref{eq:thm59}:
+\begin{itemize}
+\item Only sequences $\alpha\in\mathcal{D}(n)$ supported on a single subset $A$ ($|A|=k$, $1\le \alpha_A\le k$) contribute to $[t^1]$, yielding $\sum_{k=1}^n\binom{n}{k}\sum_{a=1}^k\frac{w_k}{a}=\sum_{k=1}^n\binom{n}{k}H_k w_k$, which is~\eqref{eq:e1-closed}.
+\item Sequences $\alpha\in\mathcal{D}(n)$ contributing to $[t^2]$ have support size either $1$ or $2$. Support size $1$ ($|A|=k$, $1\le a=\alpha_A\le k$) contributes $\frac{H_{a-1}}{a}w_k^2$ per subset $A$, giving the first sum in~\eqref{eq:e2-closed}. Support size $2$ consists of unordered distinct pairs $\{A,B\}$ of nonempty subsets with $|A|=k$, $|B|=\ell$, and $|A\cup B|=u$ (excluding $k=\ell=u$, which forces $A=B$). For such a pair, the Hall conditions reduce to $1\le a\le k$, $1\le b\le\ell$, and $a+b\le u$, i.e., $1\le a\le\min(k,u-1)$ and $1\le b\le\min(\ell,u-a)$, contributing
+\[
+\sum_{a=1}^{\min(k,u-1)}\sum_{b=1}^{\min(\ell,u-a)}\frac{w_k w_\ell}{ab}
+= w_k w_\ell \sum_{a=1}^{\min(k,u-1)}\frac{H_{\min(\ell,u-a)}}{a}.
+\]
+The number of ordered pairs $(A,B)$ of nonempty subsets of $[n]$ with $(|A|,|B|,|A\cup B|)=(k,\ell,u)$ is $\binom{n}{u}\frac{u!}{(u-\ell)!(u-k)!(k+\ell-u)!}=\frac{n!}{(n-u)!(u-\ell)!(u-k)!(k+\ell-u)!}$; dividing by $2$ to count unordered pairs gives the second sum in~\eqref{eq:e2-closed}. \qedhere
+\end{itemize}
+\end{proof}
+
+\section{Proof of Theorem~\ref{thm:main}}
+\label{sec:proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+For $\vb(m)=(1^5,1+m,1^3,1+m,1^4)\in\ZZ_{>0}^{14}$, we have $x_6=x_{10}=m$ and all other $x_r=0$. By Proposition~\ref{prop:mink},
+\[
+P(\vx(m)) = P_0 + m(U_5 + U_9) \subset \RR^{14}.
+\]
+We first determine the quadratic Ehrhart coefficient of $Q:=U_5+U_9\subset\RR^{14}$ directly from its inequality description $Q=\{z\in\RR_{\ge 0}^{14} : \sum_{i\in I} z_i \le \min(|I|,5)+\min(|I|,9)\;\forall\emptyset\ne I\subseteq[14]\}$. Because the bounds depend only on $|I|$, grouping lattice points by their sorted coordinate multiplicities gives an exact integer dynamic program computing $\#(tQ\cap\ZZ^{14})$ for $t=0,1,\dots,14$; exact Newton difference interpolation then yields the degree-$14$ polynomial $\ehr_Q(t)\in\QQ[t]$ with
+\begin{equation}\label{eq:U5U9}
+[t^2]\ehr_{U_5+U_9}(t) = -\frac{36952721}{3880800} \approx -9.52193 < 0.
+\end{equation}
+In particular, $U_5+U_9\subset\RR^{14}$ is itself Ehrhart negative.
+
+Next, by~\eqref{eq:mu2},~\eqref{eq:wk}, and Lemma~\ref{lem:e1e2} (or equivalently~\cite[Corollary~5.6]{HLTV26}), $\mu_2(\X_{14}(\vb(m)))$ is a polynomial in $m$ of degree at most $2$, whose leading $m^2$-coefficient equals $[t^2]\ehr_{U_5+U_9}(t)$ by homogeneity of the top $m$-degree part of $\ehr_{P_0+mQ}(t)=\#(tP_0+tmQ\cap\ZZ^{14})$. We compute $\mu_2(\X_{14}(\vb(m)))$ at $m=0,1,2$ by two completely independent exact algorithms:
+\begin{enumerate}
+\item[(i)] \emph{Direct lattice-point enumeration:} counting $\#(t(\X_{14}(\vb(m))-\mathbf{1})\cap\ZZ^{14})$ for $t=0,1,\dots,14$ from the raw inequalities~\eqref{eq:ineq} via exact integer dynamic programming, interpolating $\ehr_{\X_{14}(\vb(m))}(t)$ over $\QQ$, and evaluating $\mu_2=e_2-13e_1+91$.
+\item[(ii)] \emph{Closed-form draconian evaluation:} evaluating~\eqref{eq:e1-closed}--\eqref{eq:e2-closed} directly in exact rational arithmetic via~\eqref{eq:wk}.
+\end{enumerate}
+Both methods produce identical rational values:
+\[
+\mu_2\bigl(\X_{14}(\vb(0))\bigr) = \frac{29211}{4}, \quad
+\mu_2\bigl(\X_{14}(\vb(1))\bigr) = \frac{38762683049}{3880800}, \quad
+\mu_2\bigl(\X_{14}(\vb(2))\bigr) = \frac{2046289519}{161700}.
+\]
+Unique quadratic interpolation through $m=0,1,2$ yields
+\begin{align*}
+\mu_2\bigl(\X_{14}(\vb(m))\bigr)
+&= -\frac{36952721}{3880800}\,m^2 + \frac{149416051}{55440}\,m + \frac{29211}{4} \\
+&= \frac{-36952721\,m^2 + 10459123570\,m + 28340512200}{3880800},
+\end{align*}
+confirming~\eqref{eq:mu2-quad} and independently recovering the leading coefficient~\eqref{eq:U5U9}. Evaluating~\eqref{eq:mu2-quad} at $m=285$ and $m=286$ (and checking directly via Lemma~\ref{lem:e1e2} at $\vb(285)$ and $\vb(286)$) gives
+\[
+\mu_2\bigl(\X_{14}(\vb(285))\bigr) = \frac{102746219}{51744} > 0,
+\qquad
+\mu_2\bigl(\X_{14}(\vb(286))\bigr) = -\frac{8337823}{11025} < 0,
+\]
+proving part~(a). Finally, evaluating Lemma~\ref{lem:e1e2} directly at $m=317$, i.e.\ $\vb=(1^5,318,1^3,318,1^4)$, yields
+\[
+e_2\bigl(\X_{14}(\vb)\bigr) = -\frac{777669659}{3880800} < 0,
+\qquad
+\mu_2\bigl(\X_{14}(\vb)\bigr) = -\frac{11195736263}{117600} < 0,
+\]
+proving part~(b).
+\end{proof}
+
+\section{Sharper, Smaller-Entry, and Multivariate Counterexamples}
+\label{sec:sharper}
+
+Applying Lemma~\ref{lem:e1e2} and direct lattice-point counting across unequal weights and higher dimensions yields smaller parameter entries, including a binary $\{1,2\}$-vector counterexample in dimension $20$, as summarized in Table~\ref{tab:counterexamples}.
+
+\begin{table}[h]
+\centering
+\caption{Exact rational counterexamples to Conjecture~8.1 (and Ehrhart positivity) of~\cite{HLTV26}, verified in \texttt{verify.py}.}
+\label{tab:counterexamples}
+\renewcommand{\arraystretch}{1.45}
+\setlength{\tabcolsep}{6pt}
+\small
+\begin{tabular}{cllll}
+\toprule
+$n$ & Parameter vector $\vb$ & Exact $e_2$ & Exact $\mu_2$ & Property violated \\
+\midrule
+$14$ & $(1^5,287,1^3,287,1^4)$ & $>0$ & $-\frac{8337823}{11025}$ & Magic ($\mu_2<0$) \\
+$14$ & $(1^5,318,1^3,318,1^4)$ & $-\frac{777669659}{3880800}$ & $-\frac{11195736263}{117600}$ & Ehrhart \& magic \\
+$14$ & $(1^5,187,1^3,228,1^4)$ & $\frac{3101451036227}{50450400}$ & $-\frac{10491632153}{50450400}$ & Min $\max b_i=228$ ($\mu_2<0$) \\
+$14$ & $(1^5,208,1^3,253,1^4)$ & $-\frac{5255462383}{5605600}$ & $-\frac{35322635893}{509600}$ & Min $\max b_i=253$ ($e_2<0$) \\
+$18$ & $(1^6,3,1^5,3,1^5)$ & $\frac{22435315633}{6306300}$ & $-\frac{3708081001}{3153150}$ & $\{1,3\}$-vec ($e_2>0,\mu_2<0$) \\
+$20$ & $(1^7,2,1^5,2,1^6)$ & $-\frac{10007742397957}{908107200}$ & $-\frac{260316261282989}{15437822400}$ & Binary $\{1,2\}$ (both) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{proposition}[Multivariate magic negativity in dimensions $13$ and $14$]\label{prop:multiv}
+Let $M_n(\vx,y):=(1-y)^n\ehr_{P(\vx)}\bigl(\frac{y}{1-y}\bigr)\in\QQ[x_1,\dots,x_n,y]$ be the shifted multivariate magic polynomial of $\X_n(\vb)$ in $x_i=b_i-1$. Direct lattice-point counting and inclusion--exclusion yield:
+\begin{align*}
+[x_6 x_{10} y^2]\,M_{13} &= [t^2]\bigl(\ehr_{U_4+U_8} - \ehr_{U_4} - \ehr_{U_8}\bigr) = -\frac{842231}{69300} < 0, \\
+[x_7 x_{11} x_{12} y^3]\,M_{14} &= [abc]\,\#\bigl((a U_3 + b U_4 + c U_8)\cap\ZZ^{14}\bigr) = -\frac{125057}{450} < 0.
+\end{align*}
+\end{proposition}
+
+\begin{remark}
+While Proposition~\ref{prop:multiv} shows that the stronger coefficientwise multivariate magic-positivity property already breaks at $n=13$, whether there exists a positive integer vector $\vb\in\ZZ_{>0}^n$ violating Conjecture~8.1 in any dimension $n\le 13$ remains an interesting open question.
+\end{remark}
+
+\subsection*{Independent computational verification}
+The standalone Python~3 verifier \texttt{verify.py} (standard library only, exact \texttt{fractions.Fraction} arithmetic), available at \url{https://github.com/CosmicCrusader23/mathslopslopslop}, independently reproduces~\eqref{eq:U5U9}, Theorem~\ref{thm:main}, Table~\ref{tab:counterexamples}, and Proposition~\ref{prop:multiv}, together with sanity checks on~\cite[Examples~4.2, 5.2, and~5.12]{HLTV26}.
+
+\subsection*{Authorship and AI attribution}
+This manuscript is explicitly classified as \textbf{AI-authored}. The mathematical discoveries, proofs, computational verification, and manuscript preparation were performed end to end by AI systems as follows:
+\begin{itemize}
+\item \textbf{ChatGPT (OpenAI):} Carried out initial exact symbolic verification of multivariate magic positivity for $3\le n\le 10$; formulated the uniform-matroid Minkowski decomposition and Khovanskii--Pukhlikov Todd-operator analysis for the top parameter-degree layers; discovered the negative mixed cubic coefficient $[x_7 x_{11} x_{12} y^3]M_{14}=-\frac{125057}{450}$; isolated the Ehrhart-negative Minkowski sum $U_5+U_9\subset\RR^{14}$ with $[t^2]\ehr_{U_5+U_9}(t)=-\frac{36952721}{3880800}$; and discovered the $n=14$ counterexample $\vb=(1^5,287,1^3,287,1^4)$ ($\mu_2=-\frac{8337823}{11025}$) together with the quadratic formula~\eqref{eq:mu2-quad}.
+\item \textbf{Google Antigravity (Google DeepMind):} Independently proved Proposition~\ref{prop:mink} and Lemma~\ref{lem:e1e2} and verified all $n=14$ certificates from scratch via direct integer dynamic programming from~\eqref{eq:ineq} and closed-form draconian extraction; discovered the additional counterexamples in Theorem~\ref{thm:main}(b) ($n=14$ Ehrhart negativity at $m=317$), Table~\ref{tab:counterexamples} ($n=14$ minimal-entry unequal vectors with $\max b_i=228$ and $253$, $n=18$ $\{1,3\}$-vector, $n=20$ binary $\{1,2\}$-vector), and Proposition~\ref{prop:multiv} ($n=13$ mixed negative coefficient $[x_6 x_{10} y^2]M_{13}=-\frac{842231}{69300}$); wrote the standalone verifier \texttt{verify.py}; and prepared this \LaTeX{} manuscript.
+\item \textbf{Edwin Chan (human submitter and research coordinator):} Selected the target conjecture, prompted and coordinated the AI agents across sessions, reviewed the verified outputs, and manages repository publication and archival submission. No manual mathematical proof steps or verification code were authored by the human coordinator.
+\end{itemize}
+
+\begin{thebibliography}{10}
+
+\bibitem{BBCDDDLMMNV}
+M.~M.~Bayer, S.~Borgwardt, T.~Chambers, S.~Daugherty, A.~Dawkins, D.~Deligeorgaki, H.-C.~Liao, T.~McAllister, A.~Morrison, G.~Nelson, and A.~R.~Vindas-Mel\'endez,
+\emph{Combinatorics of generalized parking-function polytopes},
+Discrete Comput. Geom. \textbf{76} (2026), no.~1, 339--377.
+
+\bibitem{Bra06}
+P.~Br\"and\'en,
+\emph{On linear transformations preserving the P\'olya frequency property},
+Trans. Amer. Math. Soc. \textbf{358} (2006), no.~8, 3697--3716.
+
+\bibitem{FH24}
+L.~Ferroni and A.~Higashitani,
+\emph{Examples and counterexamples in Ehrhart theory},
+EMS Surv. Math. Sci. (2024), arXiv:2307.10852.
+
+\bibitem{HLV24}
+M.~Hanada, J.~Lentfer, and A.~R.~Vindas-Mel\'endez,
+\emph{Generalized parking function polytopes},
+Ann. Comb. \textbf{28} (2024), no.~2, 575--613.
+
+\bibitem{HLTV26}
+C.~Hill, A.~Luo, V.~Trinh, and A.~R.~Vindas-Mel\'endez,
+\emph{Lattice slices, Ehrhart polynomials, and magic positivity of generalized parking-function polytopes},
+arXiv:2607.15503, 2026.
+
+\bibitem{LZ26}
+F.~Liu and Z.~Zhang,
+\emph{Magic positivity for the Ehrhart polynomials of partial permutohedra},
+arXiv:2607.03854, 2026.
+
+\bibitem{Pos09}
+A.~Postnikov,
+\emph{Permutohedra, associahedra, and beyond},
+Int. Math. Res. Not. IMRN \textbf{2009} (2009), no.~6, 1026--1106.
+
+\bibitem{Sch03}
+A.~Schrijver,
+\emph{Combinatorial Optimization: Polyhedra and Efficiency}, Vol.~B,
+Algorithms and Combinatorics \textbf{24}, Springer, Berlin, 2003.
+
+\end{thebibliography}
+
+\end{document}

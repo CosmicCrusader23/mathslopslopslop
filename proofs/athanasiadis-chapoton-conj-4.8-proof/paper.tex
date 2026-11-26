@@ -1,0 +1,394 @@
+\documentclass[11pt]{amsart}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\textwidth=15.6cm
+\textheight=21.2cm
+\hoffset=-42pt
+\footskip=25pt
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\biE}{\mathbb{E}}
+\newcommand{\qQ}{\mathcal{Q}}
+\newcommand{\fF}{\mathcal{F}}
+\newcommand{\iI}{\mathcal{I}}
+\newcommand{\wW}{\mathcal{W}}
+\newcommand{\zZ}{\mathcal{Z}}
+\newcommand{\mM}{\mathcal{M}}
+\newcommand{\bDelta}{\boldsymbol{\Delta}}
+\newcommand{\Ehr}{\operatorname{Ehr}}
+\newcommand{\des}{\operatorname{des}}
+\newcommand{\Max}{\operatorname{Max}}
+\newcommand{\cyc}{\operatorname{cyc}}
+\newcommand{\up}{\mathcal{U}}
+
+\begin{document}
+
+\title[Magic positivity and reciprocity for preorder polytopes]{Magic positivity, double Ehrhart reciprocity, and the $h^*$-polynomial of preorder polytopes}
+
+\author{Google Antigravity (Google DeepMind)}
+
+\date{\today}
+\thanks{AI-authored research manuscript. Human submitter and research coordinator: Edwin Chan. See the Authorship and AI Attribution section for a detailed breakdown of contributions.}
+\subjclass[2020]{52B20, 05A15, 06A07}
+\keywords{Preorder polytope, generalized permutohedron, Ehrhart polynomial, magic positivity, double Ehrhart polynomial, distributive lattice, Vandermonde identity}
+
+\begin{abstract}
+We prove four open conjectures (arXiv:2605.26916) of Athanasiadis and Chapoton for all finite preorders $\tau$ on an $n$-element set $E$: Conjecture~4.8 (magic positivity of the Ehrhart polynomial $\mathrm{Ehr}(\mathcal{Q}_\tau, t)$ and hence real-rootedness of the $h^*$-polynomial $h^*(\mathcal{Q}_\tau, t)$), Conjecture~7.2 (double Ehrhart reciprocity $\mathbb{E}_\tau(-u,-v)=(-1)^n\mathbb{E}_\tau(u-1,v-1)$), Conjecture~4.4 (the word-descent interpretation of $h^*(\mathcal{Q}_\tau, t)$), and Equation~(22) of Conjecture~4.9 ($\mathcal{Z}(P_\tau,-1)=(-1)^n \#\mathrm{Max}(P_\tau)$). The proof combines the draconian Ehrhart formula of arXiv:2605.26916 with a general \emph{Distributive-Lattice Vandermonde Theorem} established via modularity on the lattice $\mathcal{F}(\tau)$ of order filters of $\tau$. This yields an explicit closed-form expansion for $\mathbb{E}_\tau(u,v)$ indexed by lattice points of $\mathcal{Q}_{\tau^*}$ having no coordinate equal to $1$, which at $v=0$ gives a manifestly nonnegative expansion in the magic basis with $n!\,M_\tau(y) \in \mathbb{Z}_{\ge 0}[y]$ and a combinatorial interpretation via cycle-weighted derangements. We also verify sharpness by exhibiting a $6$-element non-transitive matched $Y$-type generalized permutohedron that fails magic positivity, and contrast Conjecture~4.8 with the $8$-element counterexample $P_3$ to Conjecture~5.3.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+\label{sec:intro}
+
+Athanasiadis and Chapoton~\cite{AC26} recently introduced \emph{preorder polytopes}, generalizing Chapoton's arbor polytopes~\cite{Cha25b} and composition polytopes~\cite{Ath26}. Let $\tau$ be a finite preorder (a reflexive, transitive binary relation) on an $n$-element ground set $E$. A subset $\iI\subseteq E$ is an \emph{order ideal} of $\tau$ if $b\in\iI$ and $a\le_\tau b$ imply $a\in\iI$, and a subset $F\subseteq E$ is an \emph{order filter} of $\tau$ if $a\in F$ and $a\le_\tau b$ imply $b\in F$. Denote by $\fF(\tau)$ the finite distributive lattice of all order filters of $\tau$, ordered by inclusion; in particular, $\emptyset, E\in\fF(\tau)$ and $\fF(\tau)$ is closed under union and intersection.
+
+The \emph{preorder polytope} $\qQ_\tau\subset\RR^E$ is defined by the inequalities $x_e\ge 0$ for all $e\in E$ and
+\[
+\sum_{e\in\iI} x_e \le |\iI|
+\qquad\text{for every order ideal $\iI$ of $\tau$.}
+\]
+Let $\tau^*$ be the dual preorder ($a\le_{\tau^*} b \iff b\le_\tau a$), whose order ideals are precisely the order filters of $\tau$. The set of lattice points $P_{\tau^*}:=\qQ_{\tau^*}\cap\ZZ^E$ is therefore
+\begin{equation}\label{eq:Ptaustar}
+P_{\tau^*} = \left\{\mathbf{a}=(a_e)_{e\in E}\in\NN^E : \sum_{e\in F} a_e \le |F|\;\text{ for all } F\in\fF(\tau)\right\},
+\end{equation}
+where $\NN=\ZZ_{\ge 0}$. Viewed as a subposet of $\NN^E$, $P_{\tau^*}$ is a finite graded lower set of rank $n$, and its set of maximal elements is $\Max(P_{\tau^*})=\{\mathbf{a}\in P_{\tau^*} : |\mathbf{a}|=n\}$, where $|\mathbf{a}|:=\sum_{e\in E} a_e$.
+
+For $r,s\in\NN$, consider the Minkowski sum $\qQ_\tau(r,s):=r\,\qQ_\tau+s\,\bDelta_E$, where $\bDelta_E=\operatorname{conv}(\{\mathbf{0}\}\cup\{\mathbf{e}_e : e\in E\})$ is the standard $n$-simplex. By~\cite[Theorem~1.5(a), Lemma~4.1, and Proposition~7.1~(Eq.~(25))]{AC26}, derived via Postnikov's lattice-point formula for $Y$-type generalized permutohedra~\cite[Theorem~11.3]{Pos09}, the \emph{double Ehrhart polynomial} $\biE_\tau(u,v)\in\QQ[u,v]$ satisfying $\biE_\tau(r,s)=\#(\qQ_\tau(r,s)\cap\ZZ^E)$ for all $r,s\in\NN$ is given explicitly by
+\begin{equation}\label{eq:biE-draco}
+\biE_\tau(u,v) = \sum_{\mathbf{a}\in P_{\tau^*}} \binom{v+n-|\mathbf{a}|}{n-|\mathbf{a}|}\prod_{e\in E}\binom{u+a_e-1}{a_e},
+\end{equation}
+and specializes at $v=0$ to the Ehrhart polynomial of $\qQ_\tau$:
+\begin{equation}\label{eq:Ehr-draco}
+\Ehr(\qQ_\tau, u) = \biE_\tau(u,0) = \sum_{\mathbf{a}\in P_{\tau^*}} \prod_{e\in E}\binom{u+a_e-1}{a_e}.
+\end{equation}
+
+Recall from~\cite{FH24} that an $n$-dimensional lattice polytope $\qQ$ is \emph{magic positive} if its Ehrhart polynomial has nonnegative coefficients in the magic basis $\{t^i(1+t)^{n-i}\}_{i=0}^n$, i.e.,
+\[
+\Ehr(\qQ, t) = \sum_{i=0}^n c_i\, t^i(1+t)^{n-i}, \qquad c_i\ge 0 \quad (0\le i\le n),
+\]
+or equivalently if the magic polynomial $M_{\qQ}(y):=(1-y)^n\Ehr\bigl(\qQ,\frac{y}{1-y}\bigr)=\sum_{i=0}^n c_i y^i$ lies in $\QQ_{\ge 0}[y]$. By a theorem of Br\"and\'en~\cite[Theorem~4.2]{Bra06}, magic positivity implies that the Ehrhart $h^*$-polynomial $h^*(\qQ,t)$ has only real roots.
+
+In~\cite{AC26}, Athanasiadis and Chapoton formulated several conjectures on the Ehrhart theory of $\qQ_\tau$, verified computationally for small preorders ($n\le 5, 6,$ or $7$). In this paper we prove four of them unconditionally for all finite preorders.
+
+Define the formal power series $\Psi(w,u)=\sum_{k\ge 0}\psi_k(u)\,w^k\in\QQ[u][[w]]$ and $\Phi(w,y)=\sum_{k\ge 0}\phi_k(y)\,w^k\in\QQ[y][[w]]$ by
+\begin{equation}\label{eq:Psi-Phi}
+\begin{aligned}
+\Psi(w,u) &:= \exp\!\left(\sum_{m=2}^{\infty}\frac{w^m}{m}\sum_{r=1}^{m-1} u^r(1+u)^{m-r}\right), \\
+\Phi(w,y) &:= \exp\!\left(\sum_{m=2}^{\infty}\frac{w^m}{m}\bigl(y+y^2+\dots+y^{m-1}\bigr)\right),
+\end{aligned}
+\end{equation}
+and for each integer $W\ge 0$ define the bivariate polynomial
+\begin{equation}\label{eq:P-poly}
+P(W; u, v) := \sum_{m=0}^{W}\binom{W}{m}\binom{v+W-m}{W-m} u^m \in \QQ[u,v].
+\end{equation}
+
+\begin{theorem}[Master Formula]\label{thm:master}
+For every finite preorder $\tau$ on an $n$-element set $E$,
+\begin{equation}\label{eq:master}
+\biE_\tau(u,v) = \sum_{\substack{\mathbf{k}\in P_{\tau^*} \\ k_e\ne 1 \;\forall e\in E}} P\bigl(n-|\mathbf{k}|;\, u, v\bigr) \prod_{e\in E} \psi_{k_e}(u).
+\end{equation}
+\end{theorem}
+
+Theorem~\ref{thm:master} resolves four conjectures of~\cite{AC26} as immediate corollaries.
+
+\begin{corollary}[{\cite[Conjecture~4.8]{AC26}}]\label{cor:magic}
+For every finite preorder $\tau$ on an $n$-element set $E$, the Ehrhart polynomial $\Ehr(\qQ_\tau, t)$ is magic positive, with exact magic polynomial
+\begin{equation}\label{eq:magic-master}
+M_\tau(y) = \sum_{\substack{\mathbf{k}\in P_{\tau^*} \\ k_e\ne 1 \;\forall e\in E}} \prod_{e\in E} \phi_{k_e}(y) \in \QQ_{\ge 0}[y].
+\end{equation}
+Moreover, $n!\,M_\tau(y)\in\ZZ_{\ge 0}[y]$, and the $h^*$-polynomial $h^*(\qQ_\tau, t)$ has only real roots.
+\end{corollary}
+
+\begin{corollary}[{\cite[Conjecture~7.2]{AC26}}]\label{cor:double}
+For every finite preorder $\tau$ of size $n$,
+\[
+\biE_\tau(-u, -v) = (-1)^n\, \biE_\tau(u-1, v-1).
+\]
+\end{corollary}
+
+\begin{corollary}[{\cite[Conjecture~4.4 and Conjecture~4.9, Eq.~(22)]{AC26}}]\label{cor:hstar-zeta}
+Let $\tau$ be a finite preorder on a totally ordered $n$-element set $E$, and let $\wW_\tau\subseteq E^n$ be the set of words in which the elements of every order ideal $\iI$ of $\tau$ appear at least $|\iI|$ times. Then
+\[
+h^*(\qQ_\tau, t) = \sum_{w\in\wW_\tau} t^{n-1-\des(w)}
+\qquad\text{and}\qquad
+\zZ(P_\tau, -1) = (-1)^n\,\#\Max(P_\tau),
+\]
+where $\des(w):=\#\{i\in\{1,\dots,n-1\}: w_i > w_{i+1}\}$ and $\zZ(P_\tau, t)$ is the zeta polynomial of $P_\tau$.
+\end{corollary}
+
+We emphasize the exact scope of these results: the $q$-analogue identity~\cite[Eq.~(21) of Conjecture~4.9]{AC26}, matrix Ehrhart--Zeta duality~\cite[Conjecture~4.2]{AC26}, and the support-polynomial, reflexive-dual, and $M$-triangle conjectures of~\cite[Sections~5, 6, and~8]{AC26} are not addressed by Theorem~\ref{thm:master}.
+
+\section{A Distributive-Lattice Vandermonde Theorem}
+\label{sec:dlv}
+
+The core combinatorial engine behind Theorem~\ref{thm:master} is an exact cancellation theorem for multivariate binomial sums restricted by the order filters of an arbitrary preorder. Throughout, for any integer $w\in\ZZ$ and any $b\in\NN$, the generalized binomial coefficient is $\binom{w}{b}:=w(w-1)\cdots(w-b+1)/b!$, so that $\sum_{b\ge 0}\binom{w}{b}x^b=(1+x)^w$ in $\ZZ[[x]]$.
+
+\begin{theorem}[Distributive-Lattice Vandermonde Theorem]\label{thm:dlv}
+Let $\tau$ be a finite preorder on $E$, and let $\mathbf{w}=(w_e)_{e\in E}\in\ZZ^E$ be any integer vector satisfying
+\[
+W_F := \sum_{e\in F} w_e \ge 0 \qquad \text{for every } F\in\fF(\tau).
+\]
+Then for every integer $m\ge 0$,
+\begin{equation}\label{eq:dlv}
+S(\tau,\mathbf{w},m) := \sum_{\substack{\mathbf{b}\in\NN^E,\; |\mathbf{b}|=m \\ \sum_{e\in F} b_e \le W_F \;\forall F\in\fF(\tau)}} \prod_{e\in E}\binom{w_e}{b_e} = \binom{W_E}{m}.
+\end{equation}
+\end{theorem}
+
+To prove Theorem~\ref{thm:dlv}, fix $F\in\fF(\tau)$. Because $F$ is upward-closed in $\tau$, a subset $L\subseteq F$ is an order filter of the restricted preorder $\tau|_F$ if and only if $L\in\fF(\tau)$: if $L\in\fF(\tau|_F)$, $x\in L$, and $x\le_\tau y$ with $y\in E$, then $x\in F\in\fF(\tau)$ forces $y\in F$, hence $y\in L$. Thus $\fF(\tau|_F)=\{L\in\fF(\tau): L\subseteq F\}$ is a finite distributive lattice containing $\emptyset$ and $F$.
+
+For any $\mathbf{b}\in\NN^F$, define the surplus function $\Delta_{\mathbf{b}}:\fF(\tau|_F)\to\ZZ$ by
+\[
+\Delta_{\mathbf{b}}(L) := \sum_{e\in L} (b_e - w_e).
+\]
+Since $\mathbf{1}_{L_1\cup L_2}+\mathbf{1}_{L_1\cap L_2}=\mathbf{1}_{L_1}+\mathbf{1}_{L_2}$ pointwise on $F$, the function $\Delta_{\mathbf{b}}$ is modular on $\fF(\tau|_F)$:
+\begin{equation}\label{eq:modularity}
+\Delta_{\mathbf{b}}(L_1\cup L_2) + \Delta_{\mathbf{b}}(L_1\cap L_2) = \Delta_{\mathbf{b}}(L_1) + \Delta_{\mathbf{b}}(L_2)
+\qquad\text{for all } L_1, L_2\in\fF(\tau|_F).
+\end{equation}
+Let $M_F(\mathbf{b}):=\max_{L\in\fF(\tau|_F)}\Delta_{\mathbf{b}}(L)$ and $\mM_F(\mathbf{b}):=\{L\in\fF(\tau|_F):\Delta_{\mathbf{b}}(L)=M_F(\mathbf{b})\}$. By~\eqref{eq:modularity}, if $L_1,L_2\in\mM_F(\mathbf{b})$ then $2M_F(\mathbf{b})=\Delta_{\mathbf{b}}(L_1\cup L_2)+\Delta_{\mathbf{b}}(L_1\cap L_2)\le 2M_F(\mathbf{b})$, so both $L_1\cup L_2$ and $L_1\cap L_2$ lie in $\mM_F(\mathbf{b})$. Hence $\mM_F(\mathbf{b})$ has a unique minimum element
+\[
+H^*_F(\mathbf{b}) := \bigcap_{L\in\mM_F(\mathbf{b})} L \in \mM_F(\mathbf{b}).
+\]
+
+\begin{lemma}[Decoupled characterization of $H^*_F(\mathbf{b})$]\label{lem:decouple}
+Fix $F\in\fF(\tau)$, $H\in\fF(\tau|_F)$, and $\mathbf{b}\in\NN^F$. Then $H^*_F(\mathbf{b})=H$ if and only if:
+\begin{enumerate}
+\item[(i)] $\Delta_{\mathbf{b}}(K) < \Delta_{\mathbf{b}}(H)$ for every $K\in\fF(\tau|_H)$ with $K\subsetneq H$; and
+\item[(ii)] $\Delta_{\mathbf{b}}(G) \le \Delta_{\mathbf{b}}(H)$ for every $G\in\fF(\tau|_F)$ with $G\supseteq H$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+If $H^*_F(\mathbf{b})=H$, then (ii) holds since $H\in\mM_F(\mathbf{b})$, and (i) holds because no proper subfilter $K\subsetneq H$ can belong to $\mM_F(\mathbf{b})$. Conversely, suppose (i) and (ii) hold, and let $L\in\fF(\tau|_F)$. Then $L\cup H\in\fF(\tau|_F)$ satisfies $L\cup H\supseteq H$, so $\Delta_{\mathbf{b}}(L\cup H)\le\Delta_{\mathbf{b}}(H)$ by~(ii), while $L\cap H\in\fF(\tau|_H)$ satisfies $L\cap H\subseteq H$, so $\Delta_{\mathbf{b}}(L\cap H)\le\Delta_{\mathbf{b}}(H)$ by~(i), with strict inequality whenever $L\cap H\subsetneq H$ (i.e., $H\not\subseteq L$). By modularity~\eqref{eq:modularity},
+\[
+\Delta_{\mathbf{b}}(L) - \Delta_{\mathbf{b}}(H) = \bigl(\Delta_{\mathbf{b}}(L\cup H)-\Delta_{\mathbf{b}}(H)\bigr) + \bigl(\Delta_{\mathbf{b}}(L\cap H)-\Delta_{\mathbf{b}}(H)\bigr) \le 0,
+\]
+with strict inequality whenever $H\not\subseteq L$. Hence $H\in\mM_F(\mathbf{b})$ and $H\subseteq L$ for all $L\in\mM_F(\mathbf{b})$, i.e., $H^*_F(\mathbf{b})=H$.
+\end{proof}
+
+Crucially, decomposing $\mathbf{b}=(\mathbf{b}_1,\mathbf{b}_2)\in\NN^H\times\NN^{F\setminus H}$, condition~(i) of Lemma~\ref{lem:decouple} depends solely on $\mathbf{b}_1$, while condition~(ii) is equivalent to $\sum_{e\in G\setminus H}(b_{2,e}-w_e)\le 0$ for all $G\in\fF(\tau|_F)$ with $G\supseteq H$, which depends solely on $\mathbf{b}_2$.
+
+\begin{proof}[Proof of Theorem~\ref{thm:dlv}]
+For every nonempty filter $F\in\fF(\tau)$ and every integer $r>W_F$, define
+\[
+A_F(r) := \sum_{\substack{\mathbf{b}\in\NN^F,\; |\mathbf{b}|=r \\ \Delta_{\mathbf{b}}(K)<\Delta_{\mathbf{b}}(F) \;\forall K\in\fF(\tau|_F),\, K\subsetneq F}} \prod_{e\in F}\binom{w_e}{b_e}.
+\]
+We first prove that $A_F(r)=0$ for every nonempty $F\in\fF(\tau)$ and every integer $r>W_F$, by strong induction on $|F|$. Fix such $F$ and $r$, and set $\Omega_{F,r}:=\{\mathbf{b}\in\NN^F : |\mathbf{b}|=r\}$. Extracting $[x^r]$ from $\prod_{e\in F}(1+x)^{w_e}=(1+x)^{W_F}$ in $\ZZ[[x]]$ and using that $W_F\in\NN$ with $r>W_F$ gives
+\begin{equation}\label{eq:vanish-vand}
+0 = \binom{W_F}{r} = \sum_{\mathbf{b}\in\Omega_{F,r}} \prod_{e\in F}\binom{w_e}{b_e}.
+\end{equation}
+For every $\mathbf{b}\in\Omega_{F,r}$, we have $\Delta_{\mathbf{b}}(F)=r-W_F\ge 1 > 0 = \Delta_{\mathbf{b}}(\emptyset)$, so $H^*_F(\mathbf{b})\ne\emptyset$. Partition $\Omega_{F,r}$ according to $H=H^*_F(\mathbf{b})\in\fF(\tau|_F)\setminus\{\emptyset\}$. By Lemma~\ref{lem:decouple}:
+\begin{itemize}
+\item The vectors with $H^*_F(\mathbf{b})=F$ contribute precisely $A_F(r)$.
+\item For each nonempty proper subfilter $H\subsetneq F$, condition~(i) with $K=\emptyset$ implies $\Delta_{\mathbf{b}_1}(H)>\Delta_{\mathbf{b}_1}(\emptyset)=0$, so $s:=|\mathbf{b}_1|\ge W_H+1$; clearly $s\le r$ as well. Conversely, any $s\in\{W_H+1,\dots,r\}$ and any pair $(\mathbf{b}_1,\mathbf{b}_2)\in\NN^H\times\NN^{F\setminus H}$ with $|\mathbf{b}_1|=s$, $|\mathbf{b}_2|=r-s$, $\mathbf{b}_1$ satisfying~(i), and $\mathbf{b}_2$ satisfying~(ii) combine to a unique $\mathbf{b}\in\Omega_{F,r}$ with $H^*_F(\mathbf{b})=H$. Hence the contribution of $H$ factors as
+\[
+\sum_{s=W_H+1}^{r} A_H(s) \cdot \left(\sum_{\substack{\mathbf{b}_2\in\NN^{F\setminus H},\; |\mathbf{b}_2|=r-s \\ \Delta_{\mathbf{b}_2}(G\setminus H)\le 0 \;\forall G\in\fF(\tau|_F),\, G\supseteq H}} \prod_{e\in F\setminus H}\binom{w_e}{b_{2,e}}\right) = 0,
+\]
+since $A_H(s)=0$ for every $s>W_H$ by the induction hypothesis. (When $F$ is a minimal nonempty filter, i.e., a maximal equivalence class of $\tau$, there are no nonempty proper subfilters $H\subsetneq F$, so the base case is handled automatically.)
+\end{itemize}
+Substituting into~\eqref{eq:vanish-vand} yields $0=A_F(r)$, completing the induction.
+
+Now fix any integer $m\ge 0$ and let $B_m:=\{\mathbf{b}\in\NN^E : |\mathbf{b}|=m,\; \max_{L\in\fF(\tau)}\Delta_{\mathbf{b}}(L)\ge 1\}$ be the set of vectors violating at least one filter inequality. Notice that $\mathbf{b}\in B_m$ if and only if $H^*_E(\mathbf{b})\ne\emptyset$ (since $\Delta_{\mathbf{b}}(\emptyset)=0$). Partitioning $B_m$ by $H=H^*_E(\mathbf{b})\in\fF(\tau)\setminus\{\emptyset\}$ and $s=|\mathbf{b}_1|\ge W_H+1$ via Lemma~\ref{lem:decouple} gives
+\[
+\sum_{\mathbf{b}\in B_m}\prod_{e\in E}\binom{w_e}{b_e}
+= \sum_{\emptyset\ne H\in\fF(\tau)} \sum_{s=W_H+1}^{m} \underbrace{A_H(s)}_{=\,0} \cdot \left(\sum_{\substack{\mathbf{b}_2\in\NN^{E\setminus H},\; |\mathbf{b}_2|=m-s \\ \Delta_{\mathbf{b}_2}(G\setminus H)\le 0 \;\forall G\in\fF(\tau),\, G\supseteq H}} \prod_{e\in E\setminus H}\binom{w_e}{b_{2,e}}\right) = 0.
+\]
+Subtracting this sum from the unconstrained multivariate Vandermonde identity
+\[
+\sum_{\mathbf{b}\in\NN^E,\; |\mathbf{b}|=m}\prod_{e\in E}\binom{w_e}{b_e} = \binom{W_E}{m}
+\]
+yields~\eqref{eq:dlv}.
+\end{proof}
+
+\section{Proof of Theorem~\ref{thm:master} and Corollaries~\ref{cor:magic}--\ref{cor:hstar-zeta}}
+\label{sec:mainproof}
+
+We begin with the elementary formal power series properties of $\Psi(w,u)$ and $\Phi(w,y)$ defined in~\eqref{eq:Psi-Phi}.
+
+\begin{lemma}\label{lem:series}
+The polynomials $\phi_k(y)\in\QQ[y]$ and $\psi_k(u)\in\QQ[u]$ satisfy:
+\begin{enumerate}
+\item[(1)] $\psi_k(u)=(1+u)^k\phi_k\!\left(\frac{u}{1+u}\right)$ for all $k\ge 0$, with $\phi_0(y)=1$, $\phi_1(y)=0$, and
+\[
+k!\,\phi_k(y) = \sum_{\sigma\in D_k} \prod_{c\in\cyc(\sigma)}\bigl(y+y^2+\dots+y^{|c|-1}\bigr) \in \ZZ_{\ge 0}[y]
+\]
+for every $k\ge 2$, where $D_k\subset\mathfrak{S}_k$ is the set of derangements of $\{1,\dots,k\}$ and $\cyc(\sigma)$ is the set of disjoint cycles of $\sigma$. In particular, every coefficient of $y^j$ in $\phi_k(y)$ ($1\le j\le k-1$) is strictly positive.
+\item[(2)] $\psi_k(-u) = (-1)^k \psi_k(u-1)$ for all $k\ge 0$.
+\item[(3)] For every integer $a\ge 0$,
+\begin{equation}\label{eq:binom-expand}
+\binom{u+a-1}{a} = \sum_{\substack{k\in\{0,2,3,\dots\} \\ k\le a}} \binom{1-k}{a-k} u^{a-k} \psi_k(u).
+\end{equation}
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) Substituting $w\mapsto (1+u)w$ and $y\mapsto \frac{u}{1+u}$ into $\Phi(w,y)$ sends $w^m(y+\dots+y^{m-1})$ to $w^m\sum_{r=1}^{m-1}u^r(1+u)^{m-r}$, so $\Psi(w,u)=\Phi\bigl((1+u)w,\frac{u}{1+u}\bigr)$ and $\psi_k(u)=(1+u)^k\phi_k(\frac{u}{1+u})$. Since the exponent of $\Phi(w,y)$ begins at $w^2$, we have $\phi_0(y)=1$ and $\phi_1(y)=0$. Because $(m-1)!$ is the number of $m$-cycles on $m$ elements, the exponential formula for permutations~\cite[Corollary~5.1.6]{StaEC2} identifies $k!\,\phi_k(y)$ with the stated sum over derangements $D_k$.
+
+(2) Observe that $\sum_{r=1}^{m-1} u^r(1+u)^{m-r}=u(1+u)^m-(1+u)u^m$ for all $m\ge 1$ (vanishing at $m=1$). Summing over $m\ge 2$ in $\QQ[u][[w]]$ gives
+\begin{equation}\label{eq:log-Psi}
+\log\Psi(w,u) = \sum_{m=1}^{\infty}\frac{w^m}{m}\Bigl(u(1+u)^m - (1+u)u^m\Bigr) = (u+1)\log(1-uw) - u\log\bigl(1-(u+1)w\bigr).
+\end{equation}
+Replacing $(w,u)$ by $(-w,-u)$ in~\eqref{eq:log-Psi} yields
+\[
+\log\Psi(-w,-u) = (-u+1)\log(1-uw) + u\log\bigl(1-(u-1)w\bigr) = \log\Psi(w,u-1),
+\]
+whence $\Psi(-w,-u)=\Psi(w,u-1)$ and $\psi_k(-u)=(-1)^k\psi_k(u-1)$ for all $k\ge 0$.
+
+(3) Set $w(z):=\frac{z}{1+uz}\in z\,\QQ[u][[z]]$. Then $1-u\,w(z)=(1+uz)^{-1}$ and $1-(u+1)\,w(z)=(1-z)(1+uz)^{-1}$, so substituting $w=w(z)$ into~\eqref{eq:log-Psi} gives
+\begin{align*}
+\log\!\left((1+uz)\,\Psi\bigl(w(z),u\bigr)\right)
+&= \log(1+uz) - (u+1)\log(1+uz) - u\log(1-z) + u\log(1+uz) \\
+&= -u\log(1-z).
+\end{align*}
+Exponentiating in $\QQ[u][[z]]$ and using $\psi_1(u)=0$ yields
+\[
+\sum_{a=0}^{\infty}\binom{u+a-1}{a}z^a = (1-z)^{-u} = (1+uz)\,\Psi\!\left(\frac{z}{1+uz},u\right) = \sum_{k\in\{0,2,3,\dots\}} \psi_k(u)\, z^k (1+uz)^{1-k}.
+\]
+Expanding $(1+uz)^{1-k}=\sum_{b=0}^{\infty}\binom{1-k}{b}u^b z^b$ and extracting the coefficient of $z^a$ produces~\eqref{eq:binom-expand}.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:master}]
+Substitute~\eqref{eq:binom-expand} for each coordinate $e\in E$ into the double Ehrhart formula~\eqref{eq:biE-draco}. Writing $b_e:=a_e-k_e\in\NN$, note that since $P_{\tau^*}$ is a lower set in $\NN^E$, the condition $\mathbf{k}+\mathbf{b}\in P_{\tau^*}$ implies $\mathbf{k}\in P_{\tau^*}$ and $|\mathbf{b}|\le n-|\mathbf{k}|$. Interchanging the summations over $\mathbf{a}$ and $\mathbf{k}$ therefore gives
+\[
+\biE_\tau(u,v) = \sum_{\substack{\mathbf{k}\in P_{\tau^*} \\ k_e\ne 1 \;\forall e\in E}} \left(\prod_{e\in E}\psi_{k_e}(u)\right) \sum_{m=0}^{n-|\mathbf{k}|} \binom{v+n-|\mathbf{k}|-m}{n-|\mathbf{k}|-m} u^m \sum_{\substack{\mathbf{b}\in\NN^E,\; |\mathbf{b}|=m \\ \mathbf{k}+\mathbf{b}\in P_{\tau^*}}} \prod_{e\in E}\binom{1-k_e}{b_e}.
+\]
+For each fixed $\mathbf{k}\in P_{\tau^*}$, define $w_e:=1-k_e\in\ZZ$. By~\eqref{eq:Ptaustar}, every order filter $F\in\fF(\tau)$ satisfies $W_F=\sum_{e\in F}(1-k_e)=|F|-\sum_{e\in F}k_e\ge 0$, and $\mathbf{k}+\mathbf{b}\in P_{\tau^*}$ holds if and only if $\sum_{e\in F} b_e\le W_F$ for every $F\in\fF(\tau)$. Applying Theorem~\ref{thm:dlv}, the innermost sum equals $\binom{W_E}{m}=\binom{n-|\mathbf{k}|}{m}$. Recognizing $P(n-|\mathbf{k}|; u, v)$ from~\eqref{eq:P-poly} yields~\eqref{eq:master}.
+\end{proof}
+
+\begin{proof}[Proof of Corollary~\ref{cor:magic}]
+At $v=0$,~\eqref{eq:P-poly} reduces to $P(W; u, 0)=\sum_{m=0}^W\binom{W}{m}u^m=(1+u)^W$. Setting $v=0$ in Theorem~\ref{thm:master} and applying Lemma~\ref{lem:series}(1) gives
+\begin{align*}
+\Ehr(\qQ_\tau, u)
+&= \sum_{\substack{\mathbf{k}\in P_{\tau^*} \\ k_e\ne 1 \;\forall e\in E}} (1+u)^{n-|\mathbf{k}|}\prod_{e\in E}(1+u)^{k_e}\phi_{k_e}\!\left(\frac{u}{1+u}\right) \\
+&= (1+u)^n \sum_{\substack{\mathbf{k}\in P_{\tau^*} \\ k_e\ne 1 \;\forall e\in E}} \prod_{e\in E}\phi_{k_e}\!\left(\frac{u}{1+u}\right),
+\end{align*}
+establishing~\eqref{eq:magic-master}. By Lemma~\ref{lem:series}(1), every $\phi_{k_e}(y)$ lies in $\QQ_{\ge 0}[y]$, so $M_\tau(y)\in\QQ_{\ge 0}[y]$, proving magic positivity. Furthermore, for every $\mathbf{k}\in P_{\tau^*}$ we have $|\mathbf{k}|\le n$, so $\frac{n!}{\prod_{e\in E}k_e!}=(n-|\mathbf{k}|)!\binom{n}{n-|\mathbf{k}|,(k_e)_{e\in E}}\in\ZZ_{\ge 1}$; multiplying~\eqref{eq:magic-master} by $n!$ gives
+\[
+n!\,M_\tau(y) = \sum_{\substack{\mathbf{k}\in P_{\tau^*} \\ k_e\ne 1 \;\forall e\in E}} \frac{n!}{\prod_{e\in E} k_e!}\prod_{e\in E}\bigl(k_e!\,\phi_{k_e}(y)\bigr) \in \ZZ_{\ge 0}[y],
+\]
+which also provides a direct combinatorial interpretation of $n!\,c_i(\tau)$ in terms of partitions of a subset of $\{1,\dots,n\}$ into blocks of sizes $k_e$ ($e\in E$), a derangement on each block, cycle weights in $\{1,\dots,|c|-1\}$ summing to $i$, and a linear ordering of the remaining $n-|\mathbf{k}|$ elements. Finally, by~\cite[Theorem~4.2]{Bra06}, magic positivity of $\Ehr(\qQ_\tau, t)$ implies that $h^*(\qQ_\tau, t)$ is real-rooted.
+\end{proof}
+
+\begin{proof}[Proof of Corollary~\ref{cor:double}]
+For any integer $W\ge 0$, setting $j=W-m$ in~\eqref{eq:P-poly}, applying upper negation $\binom{-v+j}{j}=(-1)^j\binom{v-1}{j}$, expanding $u^{W-j}=((u-1)+1)^{W-j}$, and applying the Chu--Vandermonde identity gives
+\begin{align*}
+P(W; -u, -v)
+&= \sum_{j=0}^{W} \binom{W}{j}\binom{-v+j}{j}(-u)^{W-j} \\
+&= (-1)^W \sum_{j=0}^{W} \binom{W}{j}\binom{v-1}{j} \sum_{r=0}^{W-j}\binom{W-j}{r}(u-1)^r \\
+&= (-1)^W \sum_{r=0}^{W}\binom{W}{r}(u-1)^r \sum_{j=0}^{W-r}\binom{W-r}{W-r-j}\binom{v-1}{j} \\
+&= (-1)^W \sum_{r=0}^{W}\binom{W}{r}\binom{v-1+W-r}{W-r}(u-1)^r = (-1)^W P(W; u-1, v-1).
+\end{align*}
+Combining this identity with Lemma~\ref{lem:series}(2) in Theorem~\ref{thm:master}, each summand indexed by $\mathbf{k}\in P_{\tau^*}$ transforms under $(u,v)\mapsto(-u,-v)$ by the factor $(-1)^{n-|\mathbf{k}|}\prod_{e\in E}(-1)^{k_e}=(-1)^n$ times the corresponding summand at $(u-1,v-1)$. Summing over $\mathbf{k}$ yields $\biE_\tau(-u,-v)=(-1)^n\biE_\tau(u-1,v-1)$.
+\end{proof}
+
+\begin{proof}[Proof of Corollary~\ref{cor:hstar-zeta}]
+As shown in~\cite[Remark~7.3]{AC26}, specializing Corollary~\ref{cor:double} to $v=0$ yields $\Ehr(\qQ_\tau, m)=\sum_{\mathbf{a}\in\Max(P_{\tau^*})}\prod_{e\in E}\binom{m+1}{a_e}$, which by MacMahon's multiset-permutation generating function is equivalent to $h^*(\qQ_\tau, t)=\sum_{w\in\wW_\tau}t^{n-1-\des(w)}$. By~\cite[Remark~4.10(a)]{AC26}, Conjecture~4.4 immediately implies
+\[
+\zZ(P_\tau,-1)=\Ehr(\qQ_{\tau^*},-2)=(-1)^n h^*_{n-1}(\qQ_{\tau^*})=(-1)^n\#\Max(P_\tau). \qedhere
+\]
+\end{proof}
+
+\section{Examples, Sharpness, and Independent Verification}
+\label{sec:examples}
+
+\begin{example}[Running example of~\cite{AC26}, Figure~1]\label{ex:fig1}
+Let $E=\{a,b,c,d,e\}$ with equivalence class $\{a,c\}$ and strict cover relations $\{a,c\}\prec e$, $b\prec e$, $b\prec d$. The first few $\phi_k(y)$ are $\phi_0=1$, $\phi_2(y)=\frac{1}{2}y$, and $\phi_3(y)=\frac{1}{3}(y+y^2)$. Ordering coordinates $(a,c,b,d,e)$, the $13$ vectors $\mathbf{k}\in P_{\tau^*}$ with $k_x\ne 1$ for all $x\in E$ are $(0,0,0,0,0)$, together with $(k_a,k_c,k_b,0,0)$ where $(k_a,k_c)\in\{(0,0),(2,0),(3,0),(0,2),(0,3)\}$ and $k_b\in\{0,2,3\}$ subject to $k_a+k_c+k_b\le 5$. Summing $\prod_x\phi_{k_x}(y)$ via~\eqref{eq:magic-master} gives
+\[
+M_\tau(y) = 1 + 3\phi_2 + 3\phi_3 + 2\phi_2^2 + 4\phi_2\phi_3
+= 1 + \frac{5}{2}y + \frac{13}{6}y^2 + \frac{2}{3}y^3,
+\]
+recovering $\Ehr(\qQ_\tau,t)=(120+900t+2660t^2+3860t^3+2740t^4+760t^5)/120$ from~\cite[Section~7]{AC26}.
+\end{example}
+
+\begin{proposition}[Sharpness: transitivity is essential]\label{prop:sharp}
+Let $\qQ=\sum_{e=0}^5 \bDelta_{I_e}\subset\RR^6$ be the matched $Y$-type generalized permutohedron (satisfying $e\in I_e$ for every $e$, but not transitively closed) with
+\[
+I_0=\{0,2\},\;\; I_1=\{1,3,5\},\;\; I_2=\{0,2,3,5\},\;\; I_3=\{0,1,3\},\;\; I_4=\{1,2,4\},\;\; I_5=\{0,1,5\}.
+\]
+Then the magic polynomial of $\qQ$ is
+\[
+M_{\qQ}(y) = 1 + \frac{59}{12}y + \frac{439}{36}y^2 + \frac{2075}{144}y^3 + \frac{335}{72}y^4 - \frac{1}{6}y^5,
+\]
+so $\qQ$ is not magic positive ($c_5=-\frac{1}{6}<0$).
+\end{proposition}
+
+\begin{proof}
+Direct application of Postnikov's draconian formula~\cite[Theorem~11.3]{Pos09} over all $\mathbf{a}\in\NN^6$ satisfying $\sum_{e\in S} a_e\le \bigl|\bigcup_{e\in S} I_e\bigr|$ for all $\emptyset\ne S\subseteq\{0,\dots,5\}$ yields the stated exact magic polynomial; this calculation is certified in exact rational arithmetic by \texttt{verify.py}. Geometrically, dropping transitivity breaks the equality $\bigl|\bigcup_{e\in S} I_e\bigr|=|S|$ on the defining constraint lattice, so the surplus function is no longer additive and Theorem~\ref{thm:dlv} does not apply.
+\end{proof}
+
+\begin{remark}[Distinction from Conjecture~5.3]\label{rem:conj53}
+Conjecture~5.3 of~\cite{AC26} asks whether the \emph{support polynomial} $h(\tau,t):=\sum_{\mathbf{a}\in P_\tau} t^{\#\{e: a_e>0\}}$ (not to be confused with the Ehrhart $h^*$-polynomial $h^*(\qQ_\tau,t)$) is always real-rooted. An $8$-element counterexample to Conjecture~5.3 was reported on \texttt{mathdb.com/p/374962}; exhaustive exact Sturm search over all height-$2$ posets of size $8$ independently recovers the unique height-$2$ counterexample $P_3$ on $\{b_0,b_1,b_2,b_3,t_0,t_1,t_2,t_3\}$ with relations $b_0\prec t_1,t_2,t_3$, $b_1,b_2,b_3\prec t_0$, and $b_i\prec t_i$ ($i=1,2,3$), whose support polynomial $h(P_3,t)=1+17t+106t^2+303t^3+427t^4+303t^5+106t^6+17t^7+t^8$ has only $4$ real roots. In full accordance with Corollary~\ref{cor:magic}, $\qQ_{P_3}$ is strictly magic positive with
+\[
+M_{P_3}(y) = 1 + \frac{43}{12}y + \frac{71}{12}y^2 + \frac{239}{48}y^3 + \frac{85}{48}y^4
+\]
+and real-rooted $h^*$-polynomial $h^*(\qQ_{P_3},t)=1+1272t+39969t^2+217034t^3+306464t^4+119943t^5+10737t^6+100t^7$.
+\end{remark}
+
+\subsection*{Independent computational verification}
+The standalone Python~3 verifier \texttt{verify.py} (standard library only, exact \texttt{fractions.Fraction} arithmetic), available at \url{https://github.com/CosmicCrusader23/mathslopslopslop}, independently verifies Lemma~\ref{lem:series}, Theorem~\ref{thm:dlv} and $A_F(r)=0$ across $120$ random posets and non-poset preorders with signed weights $\mathbf{w}$, exact agreement between direct lattice-point counts $\#(m\qQ_\tau\cap\ZZ^n)$ plus Lagrange interpolation, Equation~\eqref{eq:biE-draco}, Theorem~\ref{thm:master}, Conjecture~4.4 direct word-descent enumeration, Corollary~\ref{cor:double}, and Corollary~\ref{cor:hstar-zeta} across $12$ diverse preorders and $P_3$, as well as Proposition~\ref{prop:sharp}.
+
+\subsection*{Authorship and AI attribution}
+This manuscript is explicitly classified as \textbf{AI-authored}. The mathematical investigation, proof development, computational verification, and manuscript preparation were performed end to end by an AI system as follows:
+\begin{itemize}
+\item \textbf{Google Antigravity (Google DeepMind):} Conducted the adversarial counterexample search across structured and random preorder families; discovered the $n=6$ non-transitive sharpness counterexample (Proposition~\ref{prop:sharp}); discovered and proved the Distributive-Lattice Vandermonde Theorem (Theorem~\ref{thm:dlv}), Lemma~\ref{lem:series}, the Master Formula (Theorem~\ref{thm:master}), and Corollaries~\ref{cor:magic}--\ref{cor:hstar-zeta} (Conjectures~4.8, 7.2, 4.4, and Equation~(22) of Conjecture~4.9 of~\cite{AC26}); independently recovered and analyzed $P_3$ (Remark~\ref{rem:conj53}); authored the standalone exact verifier \texttt{verify.py}; and prepared this \LaTeX{} manuscript.
+\item \textbf{Edwin Chan (human submitter and research coordinator):} Selected the target conjecture (Conjecture~4.8 of~\cite{AC26}) and supplied the reference to the Conjecture~5.3 counterexample entry, prompted and coordinated the AI agent, reviewed the proof and verification output, and manages repository publication and archival submission. No manual mathematical proof steps or verification code were authored by the human coordinator.
+\end{itemize}
+
+\begin{thebibliography}{10}
+
+\bibitem{Ath26}
+C.~A.~Athanasiadis,
+\emph{Zeta and Ehrhart polynomials of composition polytopes},
+arXiv:2603.11654, 2026.
+
+\bibitem{AC26}
+C.~A.~Athanasiadis and F.~Chapoton,
+\emph{Polytopes and posets associated to preorders},
+arXiv:2605.26916, 2026.
+
+\bibitem{Bra06}
+P.~Br\"and\'en,
+\emph{On linear transformations preserving the P\'olya frequency property},
+Trans. Amer. Math. Soc. \textbf{358} (2006), no.~8, 3697--3716.
+
+\bibitem{Cha25b}
+F.~Chapoton,
+\emph{On posets and polytopes attached to arbors},
+Math. Scand. \textbf{131} (2025), 401--449.
+
+\bibitem{FH24}
+L.~Ferroni and A.~Higashitani,
+\emph{Examples and counterexamples in Ehrhart theory},
+EMS Surv. Math. Sci. (2024), arXiv:2307.10852.
+
+\bibitem{Pos09}
+A.~Postnikov,
+\emph{Permutohedra, associahedra, and beyond},
+Int. Math. Res. Not. IMRN \textbf{2009} (2009), no.~6, 1026--1106.
+
+\bibitem{StaEC2}
+R.~P.~Stanley,
+\emph{Enumerative Combinatorics}, Vol.~2,
+Cambridge Studies in Advanced Mathematics \textbf{62},
+Cambridge University Press, Cambridge, 1999.
+
+\end{thebibliography}
+
+\end{document}
