@@ -56,7 +56,7 @@ ALL CHECKS PASSED
 
 ## Build the PDFs
 
-The sources are standalone AMS-LaTeX files. From either project directory:
+The standalone sources use AMS-LaTeX theorem and equation environments with Libertinus Serif and Libertinus Math. Build with Tectonic and its TeX bundle. For inspection, rasterize the resulting PDF with Poppler. Run these commands from either project directory.
 
 ```sh
 tectonic --keep-logs paper.tex

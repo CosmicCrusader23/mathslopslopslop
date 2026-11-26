@@ -1,16 +1,78 @@
-\documentclass[11pt,letterpaper]{amsart}
-\usepackage[T1]{fontenc}
-\usepackage{amsmath,amssymb}
+\documentclass[11pt,letterpaper]{article}
+\usepackage{amsmath,amsthm}
+\usepackage{unicode-math}
+\setmainfont{LibertinusSerif-Regular.otf}[
+  BoldFont=LibertinusSerif-Bold.otf,
+  ItalicFont=LibertinusSerif-Italic.otf,
+  BoldItalicFont=LibertinusSerif-BoldItalic.otf
+]
+\setmathfont{LibertinusMath-Regular.otf}
 \usepackage[hidelinks]{hyperref}
 
-\setlength{\textwidth}{6.15in}
-\setlength{\textheight}{8.75in}
-\setlength{\headsep}{14pt}
-\setlength{\footskip}{22pt}
+\setlength{\textwidth}{6.30in}
+\setlength{\textheight}{9.12in}
+\setlength{\headheight}{12pt}
+\setlength{\headsep}{17pt}
+\setlength{\footskip}{25pt}
 \setlength{\oddsidemargin}{\dimexpr(\paperwidth-\textwidth)/2-1in\relax}
 \setlength{\evensidemargin}{\oddsidemargin}
-\setlength{\topmargin}{\dimexpr(\paperheight-\textheight)/2-1in-\headheight-\headsep\relax}
+\setlength{\topmargin}{\dimexpr 0.96in-1in-\headheight-\headsep\relax}
+\setlength{\parindent}{1.1em}
+\setlength{\parskip}{2pt plus 0.5pt}
+\linespread{1.065}
 \raggedbottom
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
+\setlength{\jot}{5pt}
+\AtBeginDocument{%
+  \setlength{\abovedisplayskip}{11pt plus 2pt minus 2pt}%
+  \setlength{\belowdisplayskip}{11pt plus 2pt minus 2pt}%
+  \setlength{\abovedisplayshortskip}{6pt plus 2pt minus 1pt}%
+  \setlength{\belowdisplayshortskip}{9pt plus 2pt minus 1pt}%
+}
+
+\makeatletter
+\def\ps@preprint{%
+  \let\@mkboth\@gobbletwo
+  \def\@oddhead{\normalfont\small Preorder polytopes\hfil\thepage}%
+  \let\@evenhead\@oddhead
+  \let\@oddfoot\@empty
+  \let\@evenfoot\@empty
+}
+\pagestyle{preprint}
+\renewcommand{\@seccntformat}[1]{\csname the#1\endcsname.\enspace}
+\renewcommand{\section}{\@startsection{section}{1}{\z@}%
+  {-22pt plus -4pt minus -2pt}{8pt plus 2pt}%
+  {\normalfont\fontsize{14}{17}\selectfont\bfseries\raggedright}}
+\renewcommand{\subsection}{\@startsection{subsection}{2}{\z@}%
+  {-15pt plus -3pt minus -2pt}{5pt plus 1pt}%
+  {\normalfont\bfseries\raggedright}}
+\renewenvironment{proof}[1][\proofname]{%
+  \par\pushQED{\qed}\normalfont
+  \topsep9pt plus 2pt minus 1pt\relax
+  \trivlist\item[\hskip\labelsep\itshape #1\@addpunct{.}]\ignorespaces
+}{\popQED\endtrivlist\@endpefalse}
+
+\def\@maketitle{%
+  \begingroup
+  \raggedright
+  {\fontsize{18}{22}\selectfont\bfseries\@title\par}%
+  \vskip9pt
+  {\normalsize\@author
+    \thanks{AI-authored. See Section~\ref{sec:attribution} for contributions and verification.}\par}%
+  \vskip3pt
+  {\small\@date\par}%
+  \endgroup
+  \vskip17pt
+}
+\renewenvironment{abstract}{%
+  \par\noindent\textbf{Abstract}\par\nobreak\vskip4pt
+  \noindent\ignorespaces
+}{\par}
+
+\makeatother
+
 \hypersetup{
   pdftitle={Magic positivity, double Ehrhart reciprocity, and the h*-polynomial of preorder polytopes},
   pdfauthor={Edwin Chan},
@@ -18,6 +80,10 @@
   pdfkeywords={preorder polytope, Ehrhart polynomial, magic positivity, distributive lattice}
 }
 
+\newtheoremstyle{result}
+  {11pt plus 2pt minus 1pt}{9pt plus 2pt minus 1pt}
+  {\itshape}{}{\bfseries}{.}{0.55em}{}
+\theoremstyle{result}
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{proposition}[theorem]{Proposition}
@@ -38,7 +104,7 @@
 \newcommand{\wW}{\mathcal{W}}
 \newcommand{\zZ}{\mathcal{Z}}
 \newcommand{\mM}{\mathcal{M}}
-\newcommand{\bDelta}{\boldsymbol{\Delta}}
+\newcommand{\bDelta}{\symbfup{\Delta}}
 \newcommand{\Ehr}{\operatorname{Ehr}}
 \newcommand{\des}{\operatorname{des}}
 \newcommand{\Max}{\operatorname{Max}}
@@ -47,20 +113,19 @@
 
 \begin{document}
 
-\title[Magic positivity and reciprocity for preorder polytopes]{Magic positivity, double Ehrhart reciprocity, and the \texorpdfstring{$\MakeLowercase{H}^*$}{h*}-polynomial of preorder polytopes}
-
+\title{Magic positivity, double Ehrhart reciprocity, and the \texorpdfstring{$h^*$}{h*}-polynomial of preorder polytopes}
 \author{Edwin Chan}
-
 \date{November 26, 2026}
-\thanks{AI-authored. See Section~\ref{sec:attribution} for contributions and verification.}
-\subjclass[2020]{52B20, 05A15, 06A07}
-\keywords{Preorder polytope, Ehrhart polynomial, magic positivity, distributive lattice, Vandermonde identity}
+
+\maketitle
 
 \begin{abstract}
 We prove Athanasiadis and Chapoton's Conjecture~4.8 that the Ehrhart polynomial of every preorder polytope is magic positive. A signed Vandermonde identity on the lattice of order filters gives a cancellation-free formula for the magic coefficients and a cycle-weighted interpretation of their factorial multiples. The same expansion gives a formula for the double Ehrhart polynomial and recovers double Ehrhart reciprocity. Using implications of reciprocity established by Athanasiadis and Chapoton, we recover the word-descent formula for the Ehrhart $h^*$-polynomial and the formula for the zeta polynomial at $-1$.
 \end{abstract}
 
-\maketitle
+\smallskip
+{\small\noindent\textit{2020 Mathematics Subject Classification.}\enspace 52B20, 05A15, 06A07.
+\par\noindent\textit{Key words and phrases.}\enspace Preorder polytope, Ehrhart polynomial, magic positivity, distributive lattice, Vandermonde identity.\par}
 
 \section{Introduction}
 \label{sec:intro}
@@ -93,7 +158,7 @@ Recall from~\cite{FH24} that an $n$-dimensional lattice polytope $\qQ$ is \emph{
 \]
 or equivalently if the magic polynomial $M_{\qQ}(y):=(1-y)^n\Ehr\bigl(\qQ,\frac{y}{1-y}\bigr)=\sum_{i=0}^n c_i y^i$ lies in $\QQ_{\ge 0}[y]$. By a theorem of Br\"and\'en~\cite[Theorem~4.2]{Bra06}, magic positivity implies that the Ehrhart $h^*$-polynomial $h^*(\qQ,t)$ has only real roots. Athanasiadis and Chapoton asked whether all preorder polytopes are magic positive~\cite[Conjecture~4.8]{AC26}.
 
-Define the formal power series $\Psi(w,u)=\sum_{k\ge 0}\psi_k(u)\,w^k\in\QQ[u][[w]]$ and $\Phi(w,y)=\sum_{k\ge 0}\phi_k(y)\,w^k\in\QQ[y][[w]]$ by
+Let $\Psi(w,u)=\sum_{k\ge 0}\psi_k(u)\,w^k\in\QQ[u][[w]]$ and $\Phi(w,y)=\sum_{k\ge 0}\phi_k(y)\,w^k\in\QQ[y][[w]]$ be the formal power series given by
 \begin{equation}\label{eq:Psi-Phi}
 \begin{aligned}
 \Psi(w,u) &:= \exp\!\left(\sum_{m=2}^{\infty}\frac{w^m}{m}\sum_{r=1}^{m-1} u^r(1+u)^{m-r}\right), \\
@@ -112,8 +177,8 @@ For every finite preorder $\tau$ on an $n$-element set $E$,
 \end{equation}
 \end{theorem}
 
-Specializing Theorem~\ref{thm:master} at $v=0$ gives the following resolution of Conjecture~4.8.
-
+\begin{samepage}
+Specializing Theorem~\ref{thm:master} at $v=0$ gives the following resolution of Conjecture~4.8.\par\nopagebreak
 \begin{corollary}[{\cite[Conjecture~4.8]{AC26}}]\label{cor:magic}
 For every finite preorder $\tau$ on an $n$-element set $E$, the Ehrhart polynomial $\Ehr(\qQ_\tau, t)$ is magic positive, with exact cancellation-free magic polynomial
 \begin{equation}\label{eq:magic-master}
@@ -121,6 +186,7 @@ M_\tau(y) = \sum_{\substack{\mathbf{k}\in P_{\tau^*} \\ k_e\ne 1 \;\forall e\in 
 \end{equation}
 Moreover, $n!\,M_\tau(y)\in\ZZ_{\ge 0}[y]$, and the $h^*$-polynomial $h^*(\qQ_\tau, t)$ has only real roots.
 \end{corollary}
+\end{samepage}
 
 \begin{corollary}[Double Ehrhart reciprocity]\label{cor:double}
 For every finite preorder $\tau$ of size $n$,
@@ -149,6 +215,7 @@ The Evidence Press preprint~\cite[Theorem~7.1 and Corollaries~7.3--7.4]{EP26} re
 
 We first prove a cancellation identity for binomial sums over order filters. For $w\in\ZZ$ and $b\in\NN$, write $\binom{w}{b}:=w(w-1)\cdots(w-b+1)/b!$, with $\binom{w}{0}=1$. Thus $\sum_{b\ge 0}\binom{w}{b}x^b=(1+x)^w$ in $\ZZ[[x]]$, including for negative $w$.
 
+\begin{samepage}
 \begin{theorem}[Distributive-Lattice Vandermonde Theorem]\label{thm:dlv}
 Let $\tau$ be a finite preorder on $E$, and let $\mathbf{w}=(w_e)_{e\in E}\in\ZZ^E$ be any integer vector satisfying
 \[
@@ -159,6 +226,7 @@ Then for every integer $m\ge 0$,
 S(\tau,\mathbf{w},m) := \sum_{\substack{\mathbf{b}\in\NN^E,\; |\mathbf{b}|=m \\ \sum_{e\in F} b_e \le W_F \;\forall F\in\fF(\tau)}} \prod_{e\in E}\binom{w_e}{b_e} = \binom{W_E}{m}.
 \end{equation}
 \end{theorem}
+\end{samepage}
 
 To prove Theorem~\ref{thm:dlv}, fix $F\in\fF(\tau)$. Because $F$ is upward-closed in $\tau$, a subset $L\subseteq F$ is an order filter of the restricted preorder $\tau|_F$ if and only if $L\in\fF(\tau)$: if $L\in\fF(\tau|_F)$, $x\in L$, and $x\le_\tau y$ with $y\in E$, then $x\in F\in\fF(\tau)$ forces $y\in F$, hence $y\in L$. Thus $\fF(\tau|_F)=\{L\in\fF(\tau): L\subseteq F\}$ is a finite distributive lattice containing $\emptyset$ and $F$.
 
@@ -187,7 +255,12 @@ Fix $F\in\fF(\tau)$, $H\in\fF(\tau|_F)$, and $\mathbf{b}\in\NN^F$. Then $H^*_F(\
 \begin{proof}
 If $H^*_F(\mathbf{b})=H$, then (ii) holds since $H\in\mM_F(\mathbf{b})$, and (i) holds because no proper subfilter $K\subsetneq H$ can belong to $\mM_F(\mathbf{b})$. Conversely, suppose (i) and (ii) hold, and let $L\in\fF(\tau|_F)$. Then $L\cup H\in\fF(\tau|_F)$ satisfies $L\cup H\supseteq H$, so $\Delta_{\mathbf{b}}(L\cup H)\le\Delta_{\mathbf{b}}(H)$ by~(ii), while $L\cap H\in\fF(\tau|_H)$ satisfies $L\cap H\subseteq H$, so $\Delta_{\mathbf{b}}(L\cap H)\le\Delta_{\mathbf{b}}(H)$ by~(i), with strict inequality whenever $L\cap H\subsetneq H$ (i.e., $H\not\subseteq L$). By modularity~\eqref{eq:modularity},
 \[
-\Delta_{\mathbf{b}}(L) - \Delta_{\mathbf{b}}(H) = \bigl(\Delta_{\mathbf{b}}(L\cup H)-\Delta_{\mathbf{b}}(H)\bigr) + \bigl(\Delta_{\mathbf{b}}(L\cap H)-\Delta_{\mathbf{b}}(H)\bigr) \le 0,
+\begin{aligned}
+\Delta_{\mathbf{b}}(L)-\Delta_{\mathbf{b}}(H)
+  &= \bigl(\Delta_{\mathbf{b}}(L\cup H)-\Delta_{\mathbf{b}}(H)\bigr)\\
+  &\quad + \bigl(\Delta_{\mathbf{b}}(L\cap H)-\Delta_{\mathbf{b}}(H)\bigr)
+   \le 0,
+\end{aligned}
 \]
 with strict inequality whenever $H\not\subseteq L$. Hence $H\in\mM_F(\mathbf{b})$ and $H\subseteq L$ for all $L\in\mM_F(\mathbf{b})$, i.e., $H^*_F(\mathbf{b})=H$.
 \end{proof}
@@ -216,8 +289,16 @@ Substituting into~\eqref{eq:vanish-vand} yields $0=A_F(r)$, completing the induc
 
 Now fix any integer $m\ge 0$ and let $B_m:=\{\mathbf{b}\in\NN^E : |\mathbf{b}|=m,\; \max_{L\in\fF(\tau)}\Delta_{\mathbf{b}}(L)\ge 1\}$ be the set of vectors violating at least one filter inequality. Notice that $\mathbf{b}\in B_m$ if and only if $H^*_E(\mathbf{b})\ne\emptyset$ (since $\Delta_{\mathbf{b}}(\emptyset)=0$). Partitioning $B_m$ by $H=H^*_E(\mathbf{b})\in\fF(\tau)\setminus\{\emptyset\}$ and $s=|\mathbf{b}_1|\ge W_H+1$ via Lemma~\ref{lem:decouple} gives
 \[
+\begin{aligned}
 \sum_{\mathbf{b}\in B_m}\prod_{e\in E}\binom{w_e}{b_e}
-= \sum_{\emptyset\ne H\in\fF(\tau)} \sum_{s=W_H+1}^{m} \underbrace{A_H(s)}_{=\,0} \cdot \left(\sum_{\substack{\mathbf{b}_2\in\NN^{E\setminus H},\; |\mathbf{b}_2|=m-s \\ \Delta_{\mathbf{b}_2}(G\setminus H)\le 0 \;\forall G\in\fF(\tau),\, G\supseteq H}} \prod_{e\in E\setminus H}\binom{w_e}{b_{2,e}}\right) = 0.
+  &= \sum_{\emptyset\ne H\in\fF(\tau)} \sum_{s=W_H+1}^{m}
+     \underbrace{A_H(s)}_{=\,0}\\
+  &\qquad\mathord{}\cdot
+     \left(\sum_{\substack{\mathbf{b}_2\in\NN^{E\setminus H},\;|\mathbf{b}_2|=m-s\\
+        \Delta_{\mathbf{b}_2}(G\setminus H)\le 0\;\forall G\in\fF(\tau),\,G\supseteq H}}
+       \prod_{e\in E\setminus H}\binom{w_e}{b_{2,e}}\right)\\
+  &= 0.
+\end{aligned}
 \]
 Subtracting this sum from the unconstrained multivariate Vandermonde identity
 \[
@@ -231,6 +312,7 @@ yields~\eqref{eq:dlv}.
 
 We begin with the elementary formal power series properties of $\Psi(w,u)$ and $\Phi(w,y)$ defined in~\eqref{eq:Psi-Phi}.
 
+\begin{samepage}
 \begin{lemma}\label{lem:series}
 The polynomials $\phi_k(y)\in\QQ[y]$ and $\psi_k(u)\in\QQ[u]$ satisfy:
 \begin{enumerate}
@@ -246,13 +328,18 @@ for every $k\ge 2$, where $D_k\subset\mathfrak{S}_k$ is the set of derangements 
 \end{equation}
 \end{enumerate}
 \end{lemma}
+\end{samepage}
 
 \begin{proof}
 (1) Substituting $w\mapsto (1+u)w$ and $y\mapsto \frac{u}{1+u}$ into $\Phi(w,y)$ sends $w^m(y+\dots+y^{m-1})$ to $w^m\sum_{r=1}^{m-1}u^r(1+u)^{m-r}$, so $\Psi(w,u)=\Phi\bigl((1+u)w,\frac{u}{1+u}\bigr)$ in $\QQ(u)[[w]]$. Thus $\psi_k(u)=(1+u)^k\phi_k(\frac{u}{1+u})$ as a polynomial identity. Since the exponent of $\Phi(w,y)$ begins at $w^2$, we have $\phi_0(y)=1$ and $\phi_1(y)=0$. Because $(m-1)!$ is the number of $m$-cycles on $m$ elements, the exponential formula for permutations~\cite[Section~5.1]{StaEC2} identifies $k!\,\phi_k(y)$ with the stated sum over derangements $D_k$. A single $k$-cycle supplies every degree from $1$ through $k-1$.
 
 (2) Observe that $\sum_{r=1}^{m-1} u^r(1+u)^{m-r}=u(1+u)^m-(1+u)u^m$ for all $m\ge 1$ (vanishing at $m=1$). Summing over $m\ge 2$ in $\QQ[u][[w]]$ gives
 \begin{equation}\label{eq:log-Psi}
-\log\Psi(w,u) = \sum_{m=1}^{\infty}\frac{w^m}{m}\Bigl(u(1+u)^m - (1+u)u^m\Bigr) = (u+1)\log(1-uw) - u\log\bigl(1-(u+1)w\bigr).
+\begin{aligned}
+\log\Psi(w,u)
+  &= \sum_{m=1}^{\infty}\frac{w^m}{m}\Bigl(u(1+u)^m - (1+u)u^m\Bigr)\\
+  &= (u+1)\log(1-uw) - u\log\bigl(1-(u+1)w\bigr).
+\end{aligned}
 \end{equation}
 Replacing $(w,u)$ by $(-w,-u)$ in~\eqref{eq:log-Psi} yields
 \[
@@ -268,7 +355,11 @@ whence $\Psi(-w,-u)=\Psi(w,u-1)$ and $\psi_k(-u)=(-1)^k\psi_k(u-1)$ for all $k\g
 \end{align*}
 Exponentiating in $\QQ[u][[z]]$ and using $\psi_1(u)=0$ yields
 \[
-\sum_{a=0}^{\infty}\binom{u+a-1}{a}z^a = (1-z)^{-u} = (1+uz)\,\Psi\!\left(\frac{z}{1+uz},u\right) = \sum_{k\in\{0,2,3,\dots\}} \psi_k(u)\, z^k (1+uz)^{1-k}.
+\begin{aligned}
+\sum_{a=0}^{\infty}\binom{u+a-1}{a}z^a
+  &= (1-z)^{-u} = (1+uz)\,\Psi\!\left(\frac{z}{1+uz},u\right)\\
+  &= \sum_{k\in\{0,2,3,\dots\}} \psi_k(u)\, z^k (1+uz)^{1-k}.
+\end{aligned}
 \]
 Expanding $(1+uz)^{1-k}=\sum_{b=0}^{\infty}\binom{1-k}{b}u^b z^b$ and extracting the coefficient of $z^a$ produces~\eqref{eq:binom-expand}.
 \end{proof}
@@ -276,7 +367,15 @@ Expanding $(1+uz)^{1-k}=\sum_{b=0}^{\infty}\binom{1-k}{b}u^b z^b$ and extracting
 \begin{proof}[Proof of Theorem~\ref{thm:master}]
 Substitute~\eqref{eq:binom-expand} for each coordinate $e\in E$ into the double Ehrhart formula~\eqref{eq:biE-draco}. Writing $b_e:=a_e-k_e\in\NN$, note that since $P_{\tau^*}$ is a lower set in $\NN^E$, the condition $\mathbf{k}+\mathbf{b}\in P_{\tau^*}$ implies $\mathbf{k}\in P_{\tau^*}$ and $|\mathbf{b}|\le n-|\mathbf{k}|$. Interchanging the summations over $\mathbf{a}$ and $\mathbf{k}$ therefore gives
 \[
-\biE_\tau(u,v) = \sum_{\substack{\mathbf{k}\in P_{\tau^*} \\ k_e\ne 1 \;\forall e\in E}} \left(\prod_{e\in E}\psi_{k_e}(u)\right) \sum_{m=0}^{n-|\mathbf{k}|} \binom{v+n-|\mathbf{k}|-m}{n-|\mathbf{k}|-m} u^m \sum_{\substack{\mathbf{b}\in\NN^E,\; |\mathbf{b}|=m \\ \mathbf{k}+\mathbf{b}\in P_{\tau^*}}} \prod_{e\in E}\binom{1-k_e}{b_e}.
+\begin{aligned}
+\biE_\tau(u,v)
+  &= \sum_{\substack{\mathbf{k}\in P_{\tau^*}\\ k_e\ne 1\;\forall e\in E}}
+     \left(\prod_{e\in E}\psi_{k_e}(u)\right)
+     \sum_{m=0}^{n-|\mathbf{k}|}\binom{v+n-|\mathbf{k}|-m}{n-|\mathbf{k}|-m} u^m\\
+  &\qquad\qquad\mathord{}\times\sum_{\substack{\mathbf{b}\in\NN^E,\;|\mathbf{b}|=m\\
+         \mathbf{k}+\mathbf{b}\in P_{\tau^*}}}
+     \prod_{e\in E}\binom{1-k_e}{b_e}.
+\end{aligned}
 \]
 For each fixed $\mathbf{k}\in P_{\tau^*}$, define $w_e:=1-k_e\in\ZZ$. By~\eqref{eq:Ptaustar}, every order filter $F\in\fF(\tau)$ satisfies $W_F=\sum_{e\in F}(1-k_e)=|F|-\sum_{e\in F}k_e\ge 0$, and $\mathbf{k}+\mathbf{b}\in P_{\tau^*}$ holds if and only if $\sum_{e\in F} b_e\le W_F$ for every $F\in\fF(\tau)$. Applying Theorem~\ref{thm:dlv}, the innermost sum equals $\binom{W_E}{m}=\binom{n-|\mathbf{k}|}{m}$. Recognizing $P(n-|\mathbf{k}|; u, v)$ from~\eqref{eq:P-poly} yields~\eqref{eq:master}.
 \end{proof}
@@ -308,7 +407,8 @@ P(W; -u, -v)
 &= \sum_{j=0}^{W} \binom{W}{j}\binom{-v+j}{j}(-u)^{W-j} \\
 &= (-1)^W \sum_{j=0}^{W} \binom{W}{j}\binom{v-1}{j} \sum_{r=0}^{W-j}\binom{W-j}{r}(u-1)^r \\
 &= (-1)^W \sum_{r=0}^{W}\binom{W}{r}(u-1)^r \sum_{j=0}^{W-r}\binom{W-r}{W-r-j}\binom{v-1}{j} \\
-&= (-1)^W \sum_{r=0}^{W}\binom{W}{r}\binom{v-1+W-r}{W-r}(u-1)^r = (-1)^W P(W; u-1, v-1).
+&= (-1)^W \sum_{r=0}^{W}\binom{W}{r}\binom{v-1+W-r}{W-r}(u-1)^r\\
+&= (-1)^W P(W; u-1, v-1).
 \end{align*}
 Combining this identity with Lemma~\ref{lem:series}(2) in Theorem~\ref{thm:master}, each summand indexed by $\mathbf{k}\in P_{\tau^*}$ transforms under $(u,v)\mapsto(-u,-v)$ by the factor $(-1)^{n-|\mathbf{k}|}\prod_{e\in E}(-1)^{k_e}=(-1)^n$ times the corresponding summand at $(u-1,v-1)$. Summing over $\mathbf{k}$ yields $\biE_\tau(-u,-v)=(-1)^n\biE_\tau(u-1,v-1)$.
 \end{proof}
@@ -332,6 +432,7 @@ For the empty preorder, $\qQ_\tau$ is a point and the Ehrhart, $h^*$, and zeta p
 \section{Examples and scope}
 \label{sec:examples}
 
+\begin{samepage}
 \begin{example}[Running example of~\cite{AC26}, Figure~1]\label{ex:fig1}
 Let $E=\{a,b,c,d,e\}$ with equivalence class $\{a,c\}$ and strict cover relations $\{a,c\}\prec e$, $b\prec e$, $b\prec d$. The first few $\phi_k(y)$ are $\phi_0=1$, $\phi_2(y)=\frac{1}{2}y$, and $\phi_3(y)=\frac{1}{3}(y+y^2)$. Ordering coordinates $(a,c,b,d,e)$, the $13$ vectors $\mathbf{k}\in P_{\tau^*}$ with $k_x\ne 1$ for all $x\in E$ are the points $(k_a,k_c,k_b,0,0)$ where $(k_a,k_c)\in\{(0,0),(2,0),(3,0),(0,2),(0,3)\}$ and $k_b\in\{0,2,3\}$ subject to $k_a+k_c+k_b\le 5$. Summing $\prod_x\phi_{k_x}(y)$ via~\eqref{eq:magic-master} gives
 \[
@@ -340,6 +441,7 @@ M_\tau(y) = 1 + 3\phi_2 + 3\phi_3 + 2\phi_2^2 + 4\phi_2\phi_3
 \]
 recovering $\Ehr(\qQ_\tau,t)=(120+900t+2660t^2+3860t^3+2740t^4+760t^5)/120$ from~\cite[Section~7]{AC26}.
 \end{example}
+\end{samepage}
 
 \begin{samepage}
 \begin{proposition}[A non-transitive matched set system]\label{prop:sharp}
@@ -368,16 +470,19 @@ h^*(\qQ_{P_3},t) &= 1 + 1272t + 39969t^2 + 217034t^3 + 306464t^4 + 119943t^5 + 1
 the latter of which has only real roots.
 \end{remark}
 
+\begin{samepage}
 \section{Contributions and verification}
 \label{sec:attribution}
 
 Gemini 4 Neon (Google Antigravity) developed the signed Vandermonde proof used here and wrote the original verifier and manuscript. GPT-6.2 independently investigated Conjecture~4.8 and derived a related cancellation-free formula. The human submitter selected the problem, prompted the systems, and coordinated the research.
 
 The companion \href{https://github.com/CosmicCrusader23/mathslopslopslop/blob/284813d9a069ae81b3510376332afc7060895be4/proofs/athanasiadis-chapoton-conj-4.8-proof/verify.py}{Python verifier} checks the formal identities in bounded degree, the signed Vandermonde identity on fixed and seeded examples, and the Ehrhart and magic polynomials by exact lattice counts and polynomial comparison. It verifies the coefficients in the examples and uses Sturm's theorem to count the real roots for $P_3$. The manuscript is unrefereed and has no Lean certification.
+\end{samepage}
 
-\clearpage
 \begin{thebibliography}{99}
-\raggedright
+\small\raggedright
+\setlength{\itemsep}{3pt plus 1pt}
+\setlength{\parskip}{0pt}
 
 \bibitem{EP26}
 Anonymous,

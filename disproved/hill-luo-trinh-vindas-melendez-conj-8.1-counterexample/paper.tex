@@ -1,17 +1,85 @@
-\documentclass[11pt,letterpaper]{amsart}
-\usepackage[T1]{fontenc}
-\usepackage{amsmath,amssymb}
+\documentclass[11pt,letterpaper]{article}
+\usepackage{amsmath,amsthm}
+\usepackage{unicode-math}
+\setmainfont{LibertinusSerif-Regular.otf}[
+  BoldFont=LibertinusSerif-Bold.otf,
+  ItalicFont=LibertinusSerif-Italic.otf,
+  BoldItalicFont=LibertinusSerif-BoldItalic.otf
+]
+\setmathfont{LibertinusMath-Regular.otf}
 \usepackage{booktabs}
 \usepackage[hidelinks]{hyperref}
 
-\setlength{\textwidth}{6.15in}
-\setlength{\textheight}{8.75in}
-\setlength{\headsep}{14pt}
-\setlength{\footskip}{22pt}
+\setlength{\textwidth}{6.30in}
+\setlength{\textheight}{9.12in}
+\setlength{\headheight}{12pt}
+\setlength{\headsep}{17pt}
+\setlength{\footskip}{25pt}
 \setlength{\oddsidemargin}{\dimexpr(\paperwidth-\textwidth)/2-1in\relax}
 \setlength{\evensidemargin}{\oddsidemargin}
-\setlength{\topmargin}{\dimexpr(\paperheight-\textheight)/2-1in-\headheight-\headsep\relax}
+\setlength{\topmargin}{\dimexpr 0.96in-1in-\headheight-\headsep\relax}
+\setlength{\parindent}{1.1em}
+\setlength{\parskip}{2pt plus 0.5pt}
+\linespread{1.065}
 \raggedbottom
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
+\setlength{\jot}{5pt}
+\AtBeginDocument{%
+  \setlength{\abovedisplayskip}{11pt plus 2pt minus 2pt}%
+  \setlength{\belowdisplayskip}{11pt plus 2pt minus 2pt}%
+  \setlength{\abovedisplayshortskip}{6pt plus 2pt minus 1pt}%
+  \setlength{\belowdisplayshortskip}{9pt plus 2pt minus 1pt}%
+}
+
+\makeatletter
+\def\ps@preprint{%
+  \let\@mkboth\@gobbletwo
+  \def\@oddhead{\normalfont\small Parking-function polytopes\hfil\thepage}%
+  \let\@evenhead\@oddhead
+  \let\@oddfoot\@empty
+  \let\@evenfoot\@empty
+}
+\pagestyle{preprint}
+\renewcommand{\@seccntformat}[1]{\csname the#1\endcsname.\enspace}
+\renewcommand{\section}{\@startsection{section}{1}{\z@}%
+  {-22pt plus -4pt minus -2pt}{8pt plus 2pt}%
+  {\normalfont\fontsize{14}{17}\selectfont\bfseries\raggedright}}
+\renewcommand{\subsection}{\@startsection{subsection}{2}{\z@}%
+  {-15pt plus -3pt minus -2pt}{5pt plus 1pt}%
+  {\normalfont\bfseries\raggedright}}
+\renewenvironment{proof}[1][\proofname]{%
+  \par\pushQED{\qed}\normalfont
+  \topsep9pt plus 2pt minus 1pt\relax
+  \trivlist\item[\hskip\labelsep\itshape #1\@addpunct{.}]\ignorespaces
+}{\popQED\endtrivlist\@endpefalse}
+
+\def\@maketitle{%
+  \begingroup
+  \raggedright
+  {\fontsize{18}{22}\selectfont\bfseries\@title\par}%
+  \vskip9pt
+  {\normalsize\@author
+    \thanks{AI-authored. See Section~\ref{sec:attribution} for contributions and verification.}\par}%
+  \vskip3pt
+  {\small\@date\par}%
+  \endgroup
+  \vskip17pt
+}
+\renewenvironment{abstract}{%
+  \par\noindent\textbf{Abstract}\par\nobreak\vskip4pt
+  \noindent\ignorespaces
+}{\par}
+\setlength{\abovecaptionskip}{0pt}
+\setlength{\belowcaptionskip}{8pt}
+\long\def\@makecaption#1#2{%
+  \vskip\abovecaptionskip
+  {\small\noindent\textbf{#1.}\enspace #2\par}%
+  \vskip\belowcaptionskip
+}
+\makeatother
+
 \hypersetup{
   pdftitle={Counterexamples to magic positivity and Ehrhart positivity of generalized parking-function polytopes},
   pdfauthor={Edwin Chan},
@@ -19,6 +87,10 @@
   pdfkeywords={Ehrhart polynomial, parking-function polytope, magic positivity}
 }
 
+\newtheoremstyle{result}
+  {11pt plus 2pt minus 1pt}{9pt plus 2pt minus 1pt}
+  {\itshape}{}{\bfseries}{.}{0.55em}{}
+\theoremstyle{result}
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{proposition}[theorem]{Proposition}
@@ -37,20 +109,19 @@
 
 \begin{document}
 
-\title[Counterexamples to magic positivity of parking-function polytopes]{Counterexamples to magic positivity and Ehrhart positivity of generalized parking-function polytopes}
-
+\title{Counterexamples to magic positivity and Ehrhart positivity of generalized parking-function polytopes}
 \author{Edwin Chan}
-
 \date{November 26, 2026}
-\thanks{AI-authored. See Section~\ref{sec:attribution} for contributions and verification.}
-\subjclass[2020]{52B20, 05A15, 05B35}
-\keywords{Generalized parking-function polytope, Ehrhart polynomial, magic positivity, uniform matroid}
+
+\maketitle
 
 \begin{abstract}
 We disprove Conjecture~8.1 of Hill, Luo, Trinh, and Vindas-Mel\'endez by giving a generalized parking-function polytope in dimension $14$ with a negative second magic coefficient. A second example in the same dimension has a negative second Ehrhart coefficient. The construction uses a Minkowski sum of two uniform-matroid independence polytopes. We determine the minimum possible largest entry for each sign failure in a specified two-parameter family, give a binary example in dimension $20$ exhibiting both failures, and exhibit negative mixed multivariate coefficients in dimensions $13$ and $14$.
 \end{abstract}
 
-\maketitle
+\smallskip
+{\small\noindent\textit{2020 Mathematics Subject Classification.}\enspace 52B20, 05A15, 05B35.
+\par\noindent\textit{Key words and phrases.}\enspace Generalized parking-function polytope, Ehrhart polynomial, magic positivity, uniform matroid.\par}
 
 \section{Introduction}
 \label{sec:intro}
@@ -92,7 +163,9 @@ In dimension $n=14$, consider the one-parameter family
 \vb(m) := (1^5,1+m,1^3,1+m,1^4) \in \ZZ_{>0}^{14}
 \qquad (m\in\NN),
 \]
-where $1^k$ denotes $k$ consecutive entries equal to $1$. Then the second magic coefficient of $\ehr_{\X_{14}(\vb(m))}(t)$ is the exact quadratic polynomial
+where $1^k$ denotes $k$ consecutive entries equal to $1$.
+
+Then the second magic coefficient of $\ehr_{\X_{14}(\vb(m))}(t)$ is the exact quadratic polynomial
 \begin{equation}\label{eq:mu2-quad}
 \mu_2\bigl(\X_{14}(\vb(m))\bigr) = -\frac{36952721}{3880800}\,m^2 + \frac{149416051}{55440}\,m + \frac{29211}{4}.
 \end{equation}
@@ -152,6 +225,7 @@ and the draconian Ehrhart formula, obtained there from Postnikov's lattice-point
 \end{equation}
 where $\mathcal{D}(n)$ consists of all sequences $\alpha=(\alpha_A)_{\emptyset\ne A\subseteq[n]}\in\NN^{2^n-1}$ satisfying the Hall condition $\sum_{A\in E}\alpha_A\le \bigl|\bigcup_{A\in E} A\bigr|$ for every nonempty family $E$ of nonempty subsets of $[n]$. Denote by $H_m:=\sum_{j=1}^m\frac{1}{j}$ the $m$-th harmonic number (with $H_0:=0$).
 
+\begin{samepage}
 \begin{lemma}[Closed forms for $e_1$ and $e_2$]\label{lem:e1e2}
 For every $\vb\in\ZZ_{>0}^n$, with $w_k:=w_k(\vb)$ defined by~\eqref{eq:wk},
 \begin{equation}\label{eq:e1-closed}
@@ -167,6 +241,7 @@ e_2\bigl(\X_n(\vb)\bigr) &= \sum_{k=1}^n \binom{n}{k} w_k^2 \sum_{a=1}^k \frac{H
 \end{equation}
 where $\mathcal{T}_n:=\{(k,\ell,u)\in[n]^3 : \max(k,\ell)\le u\le\min(n,k+\ell),\; (k,\ell,u)\neq(u,u,u)\}$.
 \end{lemma}
+\end{samepage}
 
 \begin{proof}
 For every integer $a\ge 1$, expanding $\binom{y+a-1}{a}=\frac{y(y+1)\cdots(y+a-1)}{a!}$ around $y=0$ gives
@@ -178,10 +253,17 @@ while $\binom{y-1}{0}=1$. Substituting $y=w_{|A|}t$ into~\eqref{eq:thm59}:
 \item Only sequences $\alpha\in\mathcal{D}(n)$ supported on a single subset $A$ ($|A|=k$, $1\le \alpha_A\le k$) contribute to $[t^1]$, yielding $\sum_{k=1}^n\binom{n}{k}\sum_{a=1}^k\frac{w_k}{a}=\sum_{k=1}^n\binom{n}{k}H_k w_k$, which is~\eqref{eq:e1-closed}.
 \item Sequences $\alpha\in\mathcal{D}(n)$ contributing to $[t^2]$ have support size either $1$ or $2$. Support size $1$ ($|A|=k$, $1\le a=\alpha_A\le k$) contributes $\frac{H_{a-1}}{a}w_k^2$ per subset $A$, giving the first sum in~\eqref{eq:e2-closed}. Support size $2$ consists of unordered distinct pairs $\{A,B\}$ of nonempty subsets with $|A|=k$, $|B|=\ell$, and $|A\cup B|=u$ (excluding $k=\ell=u$, which forces $A=B$). For such a pair, the Hall conditions reduce to $1\le a\le k$, $1\le b\le\ell$, and $a+b\le u$, i.e., $1\le a\le\min(k,u-1)$ and $1\le b\le\min(\ell,u-a)$, contributing
 \[
+\begin{aligned}
 \sum_{a=1}^{\min(k,u-1)}\sum_{b=1}^{\min(\ell,u-a)}\frac{w_k w_\ell}{ab}
-= w_k w_\ell \sum_{a=1}^{\min(k,u-1)}\frac{H_{\min(\ell,u-a)}}{a}.
+  &= w_k w_\ell \sum_{a=1}^{\min(k,u-1)}\frac{H_{\min(\ell,u-a)}}{a}.
+\end{aligned}
 \]
-The number of ordered pairs $(A,B)$ of nonempty subsets of $[n]$ with $(|A|,|B|,|A\cup B|)=(k,\ell,u)$ is $\binom{n}{u}\frac{u!}{(u-\ell)!(u-k)!(k+\ell-u)!}=\frac{n!}{(n-u)!(u-\ell)!(u-k)!(k+\ell-u)!}$; dividing by $2$ to count unordered pairs gives the second sum in~\eqref{eq:e2-closed}. \qedhere
+The number of ordered pairs $(A,B)$ of nonempty subsets of $[n]$ with $(|A|,|B|,|A\cup B|)=(k,\ell,u)$ is
+\[
+\binom{n}{u}\frac{u!}{(u-\ell)!(u-k)!(k+\ell-u)!}
+=\frac{n!}{(n-u)!(u-\ell)!(u-k)!(k+\ell-u)!}.
+\]
+Dividing by $2$ to count unordered pairs gives the second sum in~\eqref{eq:e2-closed}. \qedhere
 \end{itemize}
 \end{proof}
 
@@ -213,8 +295,11 @@ e_1(m,m)=\frac{273}{2}+\frac{8160169}{360360}\,m.
 \end{equation}
 At $m=317$, \eqref{eq:mu2-quad} gives $\mu_2(317,317)=-11195736263/117600$. Consequently,
 \[
-e_2(317,317)=\mu_2(317,317)+13e_1(317,317)-91
-            =-\frac{777669659}{3880800}<0. \qedhere
+\begin{aligned}
+e_2(317,317) &= \mu_2(317,317)+13e_1(317,317)-91\\
+            &= -\frac{777669659}{3880800}<0.
+\end{aligned}
+\qedhere
 \]
 \end{proof}
 
@@ -233,29 +318,31 @@ The verifier also interpolates this coefficient from lattice counts. For each di
 
 Table~\ref{tab:counterexamples} gives the equal-weight dimension-$14$ cases, two unequal-weight cases, and examples with entries in $\{1,3\}$ in dimension $18$ and $\{1,2\}$ in dimension $20$.
 
-\begin{table}[!hb]
+\begin{table}[!ht]
 \centering
+\begin{minipage}{0.90\linewidth}
 \caption{Exact second Ehrhart and magic coefficients.}
 \label{tab:counterexamples}
 \renewcommand{\arraystretch}{1.38}
 \setlength{\tabcolsep}{12pt}
-\begin{tabular}{@{}rlrr@{}}
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}rlrr@{}}
 \toprule
 $n$ & Parameter vector $\vb$ & $e_2$ & $\mu_2$ \\
 \midrule
 $14$ & $(1^5,287,1^3,287,1^4)$ & $\dfrac{3753767953}{44100}$ & $-\dfrac{8337823}{11025}$ \\
-\addlinespace[5pt]
+\addlinespace[7pt]
 $14$ & $(1^5,318,1^3,318,1^4)$ & $-\dfrac{777669659}{3880800}$ & $-\dfrac{11195736263}{117600}$ \\
-\addlinespace[5pt]
+\addlinespace[7pt]
 $14$ & $(1^5,187,1^3,228,1^4)$ & $\dfrac{3101451036227}{50450400}$ & $-\dfrac{10491632153}{50450400}$ \\
-\addlinespace[5pt]
+\addlinespace[7pt]
 $14$ & $(1^5,208,1^3,253,1^4)$ & $-\dfrac{5255462383}{5605600}$ & $-\dfrac{35322635893}{509600}$ \\
-\addlinespace[5pt]
+\addlinespace[7pt]
 $18$ & $(1^6,3,1^5,3,1^5)$ & $\dfrac{22435315633}{6306300}$ & $-\dfrac{3708081001}{3153150}$ \\
-\addlinespace[5pt]
+\addlinespace[7pt]
 $20$ & $(1^7,2,1^5,2,1^6)$ & $-\dfrac{10007742397957}{908107200}$ & $-\dfrac{260316261282989}{15437822400}$ \\
 \bottomrule
-\end{tabular}
+\end{tabular*}
+\end{minipage}
 \end{table}
 
 \subsection{Minimality within the two-parameter family}
@@ -265,11 +352,17 @@ For $\vb(a,b)$ the largest entry is $1+\max(a,b)$. Thus a largest entry at most 
 \qquad
 \min_{0\le a,b\le 251}e_2(a,b)=\frac{12800604359}{7207200},
 \]
-attained at $(186,226)$ and $(207,251)$, respectively. The next boxes contain the negative values $\mu_2(186,227)$ and $e_2(207,252)$ in Table~\ref{tab:counterexamples}. The minimum largest entries for these two sign failures are therefore $228$ and $253$, respectively, within $\vb(a,b)$.
+attained at $(186,226)$ and $(207,251)$, respectively.
+
+The next boxes contain the negative values $\mu_2(186,227)$ and $e_2(207,252)$ in Table~\ref{tab:counterexamples}. The minimum largest entries for these two sign failures are therefore $228$ and $253$, respectively, within $\vb(a,b)$.
 
 \begin{samepage}
 \begin{proposition}[Multivariate magic negativity in dimensions $13$ and $14$]\label{prop:multiv}
-Let $M_n(\vx,y):=(1-y)^n\ehr_{P(\vx)}\bigl(\frac{y}{1-y}\bigr)\in\QQ[x_1,\dots,x_n,y]$ be the shifted multivariate magic polynomial of $\X_n(\vb)$ in $x_i=b_i-1$. Then
+Let
+\[
+M_n(\vx,y):=(1-y)^n\ehr_{P(\vx)}\bigl(\frac{y}{1-y}\bigr)\in\QQ[x_1,\dots,x_n,y]
+\]
+be the shifted multivariate magic polynomial of $\X_n(\vb)$ in $x_i=b_i-1$. Then
 \begin{align*}
 [x_6 x_{10} y^2]\,M_{13} &= [t^2]\bigl(\ehr_{U_4+U_8} - \ehr_{U_4} - \ehr_{U_8}\bigr) = -\frac{842231}{69300} < 0, \\
 [x_7 x_{11} x_{12} y^3]\,M_{14} &= [abc]\,\#\bigl((a U_3 + b U_4 + c U_8)\cap\ZZ^{14}\bigr) = -\frac{125057}{450} < 0.
@@ -281,15 +374,18 @@ Let $M_n(\vx,y):=(1-y)^n\ehr_{P(\vx)}\bigl(\frac{y}{1-y}\bigr)\in\QQ[x_1,\dots,x
 In $M_n$, the $y^d$ coefficient is $e_d$ plus a linear combination of $e_j$ for $j<d$. Each $e_j$ has parameter degree at most $j$ by multivariate Ehrhart polynomiality. Thus a squarefree monomial of degree $d$ in $[y^d]M_n$ comes from the homogeneous degree-$d$ part of $e_d$, with the weight of $P_0$ set to zero. Evaluating the marked parameters on $\{0,1\}^d$ and taking inclusion--exclusion extracts exactly that monomial. Direct lattice counts at integer dilations of the corresponding uniform-matroid sums give the displayed values. The companion verifier also extracts them from the draconian formula.
 \end{proof}
 
+\begin{samepage}
 \section{Contributions and verification}
 \label{sec:attribution}
 
 GPT-6.2 Sol (ChatGPT) found the dimension-$14$ magic-positivity counterexample and the negative mixed cubic coefficient. Gemini 4 Neon (Google Antigravity) developed the low-degree coefficient formulas, found the additional examples, and wrote the original verifier and manuscript. The human submitter selected the problem, prompted the systems, and coordinated the research.
 
 The companion \href{https://github.com/CosmicCrusader23/mathslopslopslop/blob/284813d9a069ae81b3510376332afc7060895be4/disproved/hill-luo-trinh-vindas-melendez-conj-8.1-counterexample/verify.py}{Python verifier} asserts the exact coefficients and signs in Table~\ref{tab:counterexamples}, the mixed coefficients, and the finite search bounds. It compares draconian extraction with lattice counts, using parameter interpolation for the four large-entry dimension-$14$ rows and direct counting at the displayed dimension-$18$ and dimension-$20$ vectors. The manuscript is unrefereed and has no Lean certification.
+\end{samepage}
 
 \begin{thebibliography}{99}
-\raggedright
+\small\raggedright
+\setlength{\itemsep}{3pt plus 1pt}
 
 \bibitem{BBCDDDLMMNV}
 M.~M.~Bayer, S.~Borgwardt, T.~Chambers, S.~Daugherty, A.~Dawkins, D.~Deligeorgaki, H.-C.~Liao, T.~McAllister, A.~Morrison, G.~Nelson, and A.~R.~Vindas-Mel\'endez,
