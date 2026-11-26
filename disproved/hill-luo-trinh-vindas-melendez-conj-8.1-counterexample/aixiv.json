@@ -1,0 +1,18 @@
+{
+  "title": "Counterexamples to magic positivity and Ehrhart positivity of generalized parking-function polytopes",
+  "abstract": "We disprove Conjecture 8.1 of Hill, Luo, Trinh, and Vindas-Meléndez by giving a generalized parking-function polytope in dimension $14$ with negative second magic coefficient $\\mu_2$. A second example in dimension $14$ has negative second Ehrhart coefficient $e_2$. The construction uses a Minkowski sum of two uniform-matroid independence polytopes. We determine the minimum possible largest entry for each sign failure in a specified two-parameter family, give a binary example in dimension $20$ exhibiting both failures, and exhibit negative mixed multivariate coefficients in dimensions $13$ and $14$.",
+  "ai_models": "GPT-6.2 Sol (ChatGPT), Gemini 4 Neon (Google Antigravity)",
+  "ai_statement": "GPT-6.2 Sol and Gemini 4 Neon conducted the mathematical research. Edwin Chan selected the problem, prompted the systems, and coordinated the research.",
+  "verification_notes": "Python checks every reported coefficient and sign in Table 1. Direct lattice counts and draconian extraction agree, with small-parameter interpolation for dimension 14 and direct interpolation at the stated vectors for dimensions 18 and 20. The code also checks the mixed coefficients and exhausts the two finite search boxes. The manuscript is unrefereed and has no Lean certification.",
+  "negative_results": "Negative mixed multivariate coefficients are exhibited in dimensions 13 and 14. The minimum largest-entry thresholds apply to the second coefficients in the specified two-parameter family.",
+  "comments": "Exact Python verifier and verification coverage in the companion repository.",
+  "msc_class": "52B20, 05A15, 05B35",
+  "authors": "Edwin Chan",
+  "primary_category": "math.CO",
+  "repo_url": "https://github.com/CosmicCrusader23/mathslopslopslop",
+  "ai_contribution": "ai-authored",
+  "process_summary": "file:process.md",
+  "source": "paper.tex",
+  "pdf": "paper.pdf",
+  "license": "CC BY 4.0"
+}

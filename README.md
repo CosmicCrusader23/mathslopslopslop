@@ -1,19 +1,28 @@
-# Resolved Conjectures in Ehrhart Theory and Magic Positivity
+# Ehrhart and Magic Positivity
 
-This repository contains **AI-authored** `amsart` LaTeX manuscripts (`paper.tex`), compiled PDFs (`paper.pdf`), research process notes (`process.md`), and standalone exact-arithmetic Python verifiers (`verify.py`, standard library only) for two resolved conjectures on the magic positivity of generalized permutohedra.
+This repository contains two mathematical preprints, their LaTeX sources, and standalone exact-arithmetic verifiers.
 
-**AI-Authorship & Review Notice:** Both manuscripts are explicitly classified as **AI-authored**. All mathematical discoveries, proofs, verification code, and LaTeX writing were produced by AI systems (**GPT-6.2 Sol** via ChatGPT and **Gemini 4 Neon** via Google Antigravity). **Edwin Chan** is listed as sole human author solely per archival submission conventions; his contribution was limited to problem selection, prompting, and research coordination. Neither manuscript has undergone independent human peer review or formal Lean certification, and neither represents official research conducted or endorsed by OpenAI or Google DeepMind.
+## Generalized parking-function polytopes
 
-| Status | Target Conjecture | AI Systems Credited | Manuscript (PDF / TeX) | Exact Verifier |
-| --- | --- | --- | --- | --- |
-| **Disproved** | Hill–Luo–Trinh–Vindas-Meléndez Conjecture 8.1 ([`arXiv:2607.15503`](https://arxiv.org/abs/2607.15503)) | GPT-6.2 Sol (ChatGPT), Gemini 4 Neon (Google Antigravity) | [`paper.pdf`](disproved/hill-luo-trinh-vindas-melendez-conj-8.1-counterexample/paper.pdf) · [`paper.tex`](disproved/hill-luo-trinh-vindas-melendez-conj-8.1-counterexample/paper.tex) | [`verify.py`](disproved/hill-luo-trinh-vindas-melendez-conj-8.1-counterexample/verify.py) |
-| **Proved** | Athanasiadis–Chapoton Conjecture 4.8 (plus alternative proofs of Conjectures 7.2, 4.4, and 4.9 Eq. (22); [`arXiv:2605.26916`](https://arxiv.org/abs/2605.26916)) | Gemini 4 Neon (Google Antigravity) | [`paper.pdf`](proofs/athanasiadis-chapoton-conj-4.8-proof/paper.pdf) · [`paper.tex`](proofs/athanasiadis-chapoton-conj-4.8-proof/paper.tex) | [`verify.py`](proofs/athanasiadis-chapoton-conj-4.8-proof/verify.py) |
+A dimension-14 example has a negative second magic coefficient and refutes Conjecture 8.1 of Hill, Luo, Trinh, and Vindas-Meléndez. Another dimension-14 example has a negative second Ehrhart coefficient. The paper gives exact thresholds for these two sign failures in a specified two-parameter family and a binary example in dimension 20.
 
-## Verification
+[Manuscript (PDF)](disproved/hill-luo-trinh-vindas-melendez-conj-8.1-counterexample/paper.pdf) · [LaTeX](disproved/hill-luo-trinh-vindas-melendez-conj-8.1-counterexample/paper.tex) · [Project and verifier](disproved/hill-luo-trinh-vindas-melendez-conj-8.1-counterexample/) · [Original conjecture](https://arxiv.org/abs/2607.15503v1) · [aiXiv:2611.03093](https://aixiv.online/abs/2611.03093)
 
-Run both standalone exact verifiers (Python 3 standard library only):
+## Preorder polytopes
 
-```bash
+A signed Vandermonde identity on order filters gives a cancellation-free expansion proving Conjecture 4.8 of Athanasiadis and Chapoton. The same formula recovers double Ehrhart reciprocity, and their previously established implications yield the corresponding word-descent and zeta identities.
+
+[Manuscript (PDF)](proofs/athanasiadis-chapoton-conj-4.8-proof/paper.pdf) · [LaTeX](proofs/athanasiadis-chapoton-conj-4.8-proof/paper.tex) · [Project and verifier](proofs/athanasiadis-chapoton-conj-4.8-proof/) · [Original conjecture](https://arxiv.org/abs/2605.26916v1)
+
+## Reproduce the computations
+
+Use Python 3.10 or later with assertions enabled. Both verifiers use only the standard library.
+
+```sh
 python3 disproved/hill-luo-trinh-vindas-melendez-conj-8.1-counterexample/verify.py
 python3 proofs/athanasiadis-chapoton-conj-4.8-proof/verify.py
 ```
+
+Both full runs end with `ALL CHECKS PASSED`. The [verification report](VERIFICATION.md) gives exact expected values, coverage, runtimes, and limits. Each manuscript links to the immutable commit containing the corresponding verifier.
+
+The [parking-function research log](disproved/hill-luo-trinh-vindas-melendez-conj-8.1-counterexample/process.md) and [preorder research log](proofs/athanasiadis-chapoton-conj-4.8-proof/process.md) describe the AI work and Edwin Chan’s role. The manuscripts are unrefereed and have no Lean certification. See [review response](REVIEW_RESPONSE.md) for the mathematical and bibliographic changes and [aiXiv preparation](AIXIV.md) for the submission metadata.

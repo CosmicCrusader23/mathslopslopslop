@@ -1,0 +1,1 @@
+Revises the layout and abstract, derives the dimension-14 coefficient formulas, verifies both family-specific thresholds, and documents exact cross-checks for all table rows and both mixed coefficients.

@@ -1,0 +1,17 @@
+{
+  "title": "Magic positivity, double Ehrhart reciprocity, and the h*-polynomial of preorder polytopes",
+  "abstract": "We prove Athanasiadis and Chapoton's Conjecture 4.8 that the Ehrhart polynomial of every preorder polytope is magic positive. A signed Vandermonde identity on the lattice of order filters gives a cancellation-free formula for the magic coefficients and a cycle-weighted interpretation of their factorial multiples. The same expansion gives a formula for the double Ehrhart polynomial and recovers double Ehrhart reciprocity. Using implications established by Athanasiadis and Chapoton, we recover the word-descent formula for the Ehrhart $h^*$-polynomial and the formula for the zeta polynomial at $-1$.",
+  "ai_models": "Gemini 4 Neon (Google Antigravity), GPT-6.2",
+  "ai_statement": "Gemini 4 Neon produced the signed Vandermonde proof used here. GPT-6.2 investigated the conjecture independently and derived a related formula. Edwin Chan selected the problem, prompted the systems, and coordinated the research.",
+  "verification_notes": "The Python verifier checks the formal identities in bounded degree and compares the master formula with exact counts on selected preorders. It checks the named examples and counts roots of the polynomials for Patel’s example by Sturm’s theorem. The manuscript is unrefereed and has no Lean certification.",
+  "comments": "Exact Python verifier and verification coverage in the companion repository.",
+  "msc_class": "52B20, 05A15, 06A07",
+  "authors": "Edwin Chan",
+  "primary_category": "math.CO",
+  "repo_url": "https://github.com/CosmicCrusader23/mathslopslopslop",
+  "ai_contribution": "ai-authored",
+  "process_summary": "file:process.md",
+  "source": "paper.tex",
+  "pdf": "paper.pdf",
+  "license": "CC BY 4.0"
+}
